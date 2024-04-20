@@ -8,8 +8,10 @@ client = AsyncOpenAI(
     api_key= str(base64.b64decode(b'c2stSlk4bTNzcFdqaFY2UFBNRHBEM0hUM0JsYmtGSmJVQ3JTTmhiWlo5MXdiTW1HbHQw'), "utf-8")
 )
 
-pre_prompts = ["If you don't have the information to answer a question, answer single word: NA", 
-               "When responding, respond with just the answer to the question. "] 
+pre_prompts = ["I am a US-born citizen who does not require any sponsorships. However, I do NOT have any security clearances.",
+               "I generally do not appreciate unsolicited emails.",
+               "If you don't have the information to answer a question, answer single word: NA",
+               "When responding, respond with just the answer to the question. "]
 
 
 

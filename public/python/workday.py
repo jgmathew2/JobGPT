@@ -1,10 +1,14 @@
+import asyncio
+from datetime import datetime
 import random
 import string
 import time
+import ChatGPTPrompter
 
 from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
@@ -15,7 +19,7 @@ def generate_random_string(length):
 
 
 driver = webdriver.Firefox()
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 1000)
 
 BUFFER_TIME = 0.5
 
@@ -77,9 +81,9 @@ def do_signin():
         "VzxwuY7$")
     sign_in = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]")))
     for _ in range(10):
-        sign_in.click()
-        time.sleep(BUFFER_TIME)
         try:
+            sign_in.click()
+            time.sleep(BUFFER_TIME)
             sign_in = driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]")
         except:
             break
@@ -99,8 +103,11 @@ def do_my_info():
         pass
     source_prompt.send_keys("LinkedIn")
     time.sleep(BUFFER_TIME)
+    source_prompt = wait.until(EC.presence_of_element_located(
+        (By.CSS_SELECTOR, "[data-automation-id-prompt=\"sourcePrompt\"] input")))
     source_prompt.send_keys(Keys.ENTER)
     time.sleep(BUFFER_TIME)
+    driver.switch_to.active_element.send_keys(Keys.ENTER)
 
     # TODO prev employee?
     prev_employee = wait.until(
@@ -183,9 +190,12 @@ def do_experience():
     # Work
     for i in range(1, 2):
         if i == 1:
-            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
-                                                       "[data-automation-id=\"workExperienceSection\"] [data-automation-id=\"Add\"]"))).send_keys(
-                Keys.ENTER)
+            try:
+                driver.find_element(By.CSS_SELECTOR,
+                                    "[data-automation-id=\"workExperienceSection\"] [data-automation-id=\"Add\"]").send_keys(
+                    Keys.ENTER)
+            except:
+                pass
         else:
             wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                        "[data-automation-id=\"workExperienceSection\"] [data-automation-id=\"Add Another\"]"))).send_keys(
@@ -213,17 +223,34 @@ def do_experience():
     # Education
     for i in range(1, 2):
         if i == 1:
-            wait.until(EC.presence_of_element_located(
-                (By.CSS_SELECTOR, "[data-automation-id=\"educationSection\"] [data-automation-id=\"Add\"]"))).send_keys(
-                Keys.ENTER)
+            try:
+                driver.find_element(By.CSS_SELECTOR,
+                                    "[data-automation-id=\"educationSection\"] [data-automation-id=\"Add\"]").send_keys(
+                    Keys.ENTER)
+            except:
+                pass
         else:
             wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                        "[data-automation-id=\"educationSection\"] [data-automation-id=\"Add Another\"]"))).send_keys(
                 Keys.ENTER)
 
-        wait.until(EC.presence_of_element_located(
-            (By.CSS_SELECTOR, f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"school\"]"))).send_keys(
-            "University of Maryland - College Park")
+        try:
+            # FRQ form type
+            driver.find_element(By.CSS_SELECTOR,
+                                f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"school\"]").send_keys(
+                "University of Maryland - College Park")
+        except:
+            # MCQ form type
+            try:
+                school_input = driver.find_element(By.CSS_SELECTOR,
+                                                   f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"formField-schoolItem\"] input")
+                school_input.send_keys("University of Maryland - College Park")
+                time.sleep(BUFFER_TIME)
+                school_input.send_keys(Keys.ENTER)
+                time.sleep(BUFFER_TIME)
+                driver.switch_to.active_element.send_keys(Keys.ENTER)
+            except:
+                pass
         wait.until(EC.presence_of_element_located(
             (By.CSS_SELECTOR, f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"degree\"]"))).send_keys(
             "BS")
@@ -232,6 +259,8 @@ def do_experience():
         field_of_study.send_keys("Computer Science")
         time.sleep(BUFFER_TIME)
         field_of_study.send_keys(Keys.ENTER)
+        time.sleep(BUFFER_TIME)
+        driver.switch_to.active_element.send_keys(Keys.ENTER)
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                    f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"formField-startDate\"] input"))).send_keys(
             "2023")
@@ -254,6 +283,8 @@ def do_experience():
         skills_input.send_keys(skill)
         time.sleep(BUFFER_TIME)
         skills_input.send_keys(Keys.ENTER)
+        time.sleep(4 * BUFFER_TIME)
+        driver.switch_to.active_element.send_keys(Keys.ENTER)
         time.sleep(BUFFER_TIME)
 
     # Resume
@@ -286,7 +317,7 @@ def do_experience():
             EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"workExperienceSection\"]")))
 
 
-def maybe_find(element, by, value):
+def maybe_find(element, by, value) -> WebElement | None:
     try:
         return element.find_element(by, value)
     except:
@@ -295,17 +326,118 @@ def maybe_find(element, by, value):
 
 def do_questions():
     for question_element in driver.find_elements(By.CSS_SELECTOR,
-                                                 "[data-automation-id=\"primaryQuestionnairePage\"] [data-automation-id^=\"formField-\"]"):
+                                                 "[data-automation-id*=\"QuestionnairePage\"] [data-automation-id^=\"formField-\"]"):
         question = question_element.find_element(By.XPATH, "./*[1]").text
         answer_parent = question_element.find_elements(By.XPATH, "./*")[-1]
 
         answer = maybe_find(answer_parent, By.CSS_SELECTOR, "textarea")
         if answer is not None:
-            print(question, "textarea")
+            try:
+                response = asyncio.run(ChatGPTPrompter.get_response(
+                    f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, write N/A. Speak from my perspective, rather than from yours. The question is: {question}"))
+
+                answer.clear()
+                time.sleep(BUFFER_TIME)
+                answer = answer_parent.find_element(By.CSS_SELECTOR, "textarea")
+                answer.send_keys(response)
+                print(response)
+            except:
+                pass
         else:
             answer = maybe_find(answer_parent, By.CSS_SELECTOR, "button")
-            print(question, "button")
-    pass
+            if answer is not None:
+                driver.execute_script("arguments[0].click()", answer)
+                time.sleep(BUFFER_TIME)
+
+                aria_controls = answer.get_attribute("aria-controls")
+                if aria_controls:
+                    try:
+                        list_options = driver.find_element(By.ID, aria_controls)
+                        children = list_options.find_elements(By.XPATH, "./*")
+                        if len(children) > 0:
+                            opts = list(map(lambda e: e.text, children[1:]))
+                            opts_prompt = ", ".join(map(lambda opt: f"\"{opt}\"", opts))
+
+                            prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, choose an answer that makes sense for an average person. You have a limited number of choices, and you MUST select one of these choices. The choices are: {opts_prompt}. Use one of these choices exactly. You MUST respond with one of these options. The question is: {question}"
+                            while True:
+                                response = asyncio.run(ChatGPTPrompter.get_response(prompt))
+                                if response in opts:
+                                    break
+
+                            answer.send_keys(response)
+                            time.sleep(BUFFER_TIME)
+                            answer.send_keys(Keys.ENTER)
+                    except:
+                        pass
+
+        time.sleep(2 * BUFFER_TIME)
+    wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
+
+    # Handle more questionnare pages, if more exist
+    time.sleep(10 * BUFFER_TIME)
+    try:
+        driver.find_element(By.CSS_SELECTOR, "[data-automation-id*=\"QuestionnairePage\"]")
+        do_questions()
+    except:
+        pass
+
+
+def do_voluntary():
+    buttons = wait.until(
+        EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[data-automation-id=\"usPersonalInfoSection\"] button")))
+    for button in buttons:
+        driver.execute_script("arguments[0].click()", button)
+        time.sleep(BUFFER_TIME)
+
+        aria_controls = button.get_attribute("aria-controls")
+        if aria_controls:
+            try:
+                button_options = driver.find_element(By.ID, aria_controls)
+                children = button_options.find_elements(By.XPATH, "./*")
+                if len(children) > 0:
+                    ans_found = False
+                    for child in children[1:]:
+                        child_text = child.text.lower()
+                        if "disclose" in child_text or "prefer" in child_text or "wish" in child_text or "decline" in child_text and "hispanic" not in child_text:
+                            button.send_keys(child.text)
+                            time.sleep(BUFFER_TIME)
+                            button.send_keys(Keys.ENTER)
+                            ans_found = True
+                            break
+
+                    if not ans_found:
+                        button.send_keys(children[-1].text)
+                        time.sleep(BUFFER_TIME)
+                        button.send_keys(Keys.ENTER)
+            except:
+                pass
+
+    driver.execute_script("arguments[0].click()", wait.until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"agreementCheckbox\"]"))))
+    time.sleep(BUFFER_TIME)
+
+    wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
+
+
+def do_self_identify():
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"name\"]"))).send_keys(
+        "Abd al-Rahman")
+    signature_date = wait.until(EC.presence_of_element_located(
+        (By.CSS_SELECTOR, "[data-automation-id=\"dateSectionMonth-display\"]"))).find_element(By.XPATH, "..")
+    signature_date.click()
+    time.sleep(BUFFER_TIME)
+    signature_date.send_keys(datetime.now().strftime("%m/%d/%Y"))
+    for element in wait.until(
+            EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[data-automation-id=\"disability\"] input"))):
+        element_id = element.get_attribute("id")
+        label = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, f"[for=\"{element_id}\"]")))
+        if "want to answer" in label.text.lower():
+            driver.execute_script("arguments[0].click()", element)
+
+    wait.until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
 
 
 try:
@@ -316,6 +448,8 @@ try:
     do_my_info()
     do_experience()
     do_questions()
+    do_voluntary()
+    do_self_identify()
 
     time.sleep(10_000)
 finally:
