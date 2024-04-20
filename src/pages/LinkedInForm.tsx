@@ -47,21 +47,24 @@ const LinkedInForm: React.FC = () => {
 
     return (
         <div>
-            <header className="form-header">
+            <header className="form-header has-text-centered">
                 <h1>JOB-GPT</h1>
             </header>
             <form onSubmit={handleSubmit}>
+              <div className="columns is-multiline" style={{margin: 5}}>
                 <div>
-                    <label>LinkedIn Email:</label>
+                    <div className="column is-full">
+                    <label style={{margin: 5}}>LinkedIn Email:</label>
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />
+                    </div>
                 </div>
-                <div>
-                    <label>LinkedIn Password:</label>
+                <div className="column is-full">
+                    <label style={{margin: 5}}>LinkedIn Password:</label>
                     <input
                         type="password"
                         value={password}
@@ -69,16 +72,16 @@ const LinkedInForm: React.FC = () => {
                         required
                     />
                 </div>
-                <div>
-                    <label>Search Query:</label>
+                <div className="column is-full">
+                    <label style={{margin: 5}}>Search Query:</label>
                     <input
                         type="text"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
                 </div>
-                <div>
-                    <label>Experience Level:</label>
+                <div className="column is-full">
+                    <label style={{margin: 5}}>Experience Level:</label>
                     <select value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value)} required>
                         <option value="">Select Experience Level</option>
                         <option value="Internship">Internship</option>
@@ -89,8 +92,8 @@ const LinkedInForm: React.FC = () => {
                         <option value="Executive">Executive</option>
                     </select>
                 </div>
-                <div>
-                    <label>Job Type:</label>
+                <div className="column is-full">
+                    <label style={{margin: 5}}>Job Type:</label>
                     <select value={jobType} onChange={(e) => setJobType(e.target.value)} required>
                         <option value="">Select Job Type</option>
                         <option value="Full-time">Full-time</option>
@@ -101,8 +104,8 @@ const LinkedInForm: React.FC = () => {
                         <option value="Internship">Internship</option>
                     </select>
                 </div>
-                <div>
-                    <label>Remote:</label>
+                <div className="column is-full">
+                    <label style={{margin: 5}}>Remote:</label>
                     <select value={remote} onChange={(e) => setRemote(e.target.value)} required>
                         <option value="">Select Remote Option</option>
                         <option value="On-site">On-site</option>
@@ -110,8 +113,8 @@ const LinkedInForm: React.FC = () => {
                         <option value="Remote">Remote</option>
                     </select>
                 </div>
-                <div>
-                    <label>Location:</label>
+                <div className="column is-full">
+                    <label style={{margin: 5}}>Location:</label>
                     <input
                         type="text"
                         value={location}
@@ -119,9 +122,15 @@ const LinkedInForm: React.FC = () => {
                         placeholder="e.g., New York, NY"
                     />
                 </div>
-                <button type="submit">Submit</button>
+                <button className="column is-5 button is-dark is-rounded" style={{margin: 17}} type="submit">Submit</button>
+                </div>
             </form>
+            <div className="columns" style={{margin: 5}}>
+              <div className="column" style={{margin: 5}}>
             {message && <p>{message}</p>}
+            </div>
+            </div>
+            
         </div>
     );
 };
