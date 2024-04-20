@@ -1,13 +1,18 @@
 from openai import AsyncOpenAI
 import pathlib
 import base64
+from pypdf import PdfReader
 
 client = AsyncOpenAI(
     # This is the default and can be omitted
     api_key= str(base64.b64decode(b'c2stSlk4bTNzcFdqaFY2UFBNRHBEM0hUM0JsYmtGSmJVQ3JTTmhiWlo5MXdiTW1HbHQw'), "utf-8")
 )
 
-pre_prompts = ["If you don't have the information to answer a question, answer single word: NO"] 
+pre_prompts = ["If you don't have the information to answer a question, answer single word: NA", 
+               "When responding, respond with just the answer to the question. "] 
+
+
+
 
 
 # Figure out how to do pathname with python integration
@@ -16,23 +21,27 @@ async def upload_resume():
     pathname = str(pathlib.Path(__file__).parent.resolve())
 
 
-    pathname = pathname + "/../uploads/resume.txt"
+    pathname = pathname + "/../uploads/resume.pdf"
 
-    with open(pathname, 'r') as file:
-        data = file.read()
+    reader = PdfReader(pathname)
 
-        f = open("current_gpt_convo.txt", "a")
-        f.write((data + "\n\n"))
+    data = reader.pages[0].extract_text()
 
-        chat_completion = await client.chat.completions.create(
-            messages=[
-                {
-                    "role": "user",
-                    "content": data + "\n\nDon't respond to this",
-                }
-            ],
-            model="gpt-3.5-turbo",
-        )
+    data = " ".join(data.split())
+
+
+    f = open("current_gpt_convo.txt", "a")
+    f.write((str(data) + "\n\n"))
+
+    chat_completion = await client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": data + "\n\nDon't respond to this",
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
 
 async def post_custom_info(info):
 
