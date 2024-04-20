@@ -10,6 +10,7 @@ const FormPage = () => {
   const [dataRead, setFormRead] = useState<boolean>(false);
   const navigate = useNavigate(); // Hook to access navigate function
 
+
   let updateFormData = async () => {
     try {
       // Send the JSON data with the filename
@@ -290,6 +291,9 @@ const FormPage = () => {
         </div>
         <div className="columns is-multiline is-vcentered has-text-centered">
           {skillIds.map((skillId) => {
+            
+            let skillIndex = skillIds.indexOf(skillId)
+            
             return (
               <>
                 <div className="column is-one-fourth">
@@ -297,10 +301,10 @@ const FormPage = () => {
                   <input
                     key={skillId}
                     id={skillId}
-                    value={skillId}
+                    defaultValue={skillId}
                     type="text"
                     onChange={(e) => {
-                      skillId = e.target.value;
+                      formData.skills[skillIndex] = e.target.value
                     }}
                   ></input>
                 </div>
