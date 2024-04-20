@@ -12,11 +12,11 @@ const MenuPage: React.FC = () => {
       </div>
       <div className="columns mt-4 has-text-centered">
         <div className="column">
-          <button className="button is-primary ">WORKDAY</button>
+          <button className="button is-primary ">WORKDAY (SWE INTERNSHIPS)</button>
         </div>
-        <div className="column">
+        {/* <div className="column">
           <button className="button is-link">GREENHOUSE</button>
-        </div>
+        </div> */}
         <div className="column">
           <button className="button is-info">LINKEDIN EASY-APPLY</button>
         </div>

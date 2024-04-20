@@ -1,6 +1,7 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import fs from 'fs';
 import { fileURLToPath } from 'node:url'
+import {readFileSync} from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import { update } from './update'
@@ -76,6 +77,21 @@ ipcMain.handle('upload_resume', async (event, { buffer }) => {
 
 
     return { success: true};
+  } catch (err) {
+    console.error(`Failed to upload resume: ${err}`);
+    return { success: false, message: err.message };
+  }
+});
+
+ipcMain.handle('form_data_from_json', async (event, { buffer }) => {
+  
+  try {
+    // Define the base path for uploads relative to the application's root directory
+    const json_file = path.join(__dirname, "../../");
+
+    const data = fs.readFileSync('/Users/joe/test.txt', 'utf8');
+
+    return { success: true, data};
   } catch (err) {
     console.error(`Failed to upload resume: ${err}`);
     return { success: false, message: err.message };

@@ -40,6 +40,8 @@ def load_user_info():
 
     user_data["linkedin"] = asyncio.run(get_response("What is my LinkedIn id (content after /in/ in href)"))
 
+    write_to_file()
+
 
 def write_to_file():
 
