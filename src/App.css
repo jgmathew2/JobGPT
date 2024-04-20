@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'Ligconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Ligconsolata'), url('https://fonts.cdnfonts.com/s/107278/Ligconsolata-Regular.woff') format('woff');
+}
+
+#root {
+  font-family: "Ligconsolata", sans-serif;
+  min-width: 100%;
+
+}
+
 /* LandingPage.css */
 .landing-page-container {
   width: 100%;
@@ -16,10 +29,6 @@
 
 .upload-container {
   margin-top: 20px;
-}
-
-#root {
-  font-family: "Ligconsolata", sans-serif
 }
 
 .upload-button {
@@ -60,13 +69,3 @@
   font-style: italic;
 }
 
-@font-face {
-  font-family: 'Ligconsolata';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Ligconsolata'), url('https://fonts.cdnfonts.com/s/107278/Ligconsolata-Regular.woff') format('woff');
-}
-
-#root {
-  min-width: 100%;
-}

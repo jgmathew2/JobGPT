@@ -1,13 +1,8 @@
 // StatusPage.tsx
 import React, { useState } from "react";
+import SubmittedApplications from "@/components/SubmittedApplications";
 
 const StatusPage: React.FC = () => {
-  const [companyList, setCompanyList] = useState([
-    "Google STEP",
-    "Meta University",
-  ]);
-  const [applicationCount, setApplicationCount] = useState(2);
-
   // Placeholder functions to mimic actions
   const handleStart = () => {};
 
@@ -23,19 +18,11 @@ const StatusPage: React.FC = () => {
         </div>
         <div className="container">
           <div className="columns is-centered">
-            <h2 className="columns" style={{ fontSize: 25 }}>
-              Application Success!
-            </h2>
           </div>
         </div>
       </header>
-      <div className="">
-        {companyList.map((company, index) => (
-          <div key={index}>{company}</div>
-        ))}
-      </div>
-      <p>Applications submitted: {applicationCount}</p>
       <div>
+        <SubmittedApplications />
         <button onClick={handleStart} className="action-button">
           START
         </button>
