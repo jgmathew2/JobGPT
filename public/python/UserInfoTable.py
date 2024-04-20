@@ -7,8 +7,7 @@ user_data = {}
 
 def load_user_info():
 
-    asyncio.run(clear_convo())
-
+    clear_convo()
 
 
     asyncio.run(upload_resume())
@@ -17,19 +16,22 @@ def load_user_info():
     user_data["last_name"] = asyncio.run(get_response("What's my last name?"))
 
 
-
     user_data["address"] = asyncio.run(get_response("Address?"))
 
-    
     user_data["city"] = asyncio.run(get_response("City?"))
     user_data["state"] = asyncio.run(get_response("Which state am I from?"))
     user_data["zipcode"] = asyncio.run(get_response("zipcode?"))
     user_data["phone_number"] = asyncio.run(get_response("phone number?"))
     user_data["studying"] = asyncio.run(get_response("What is my college major?"))
 
-
     job_data = {}
-    numJobs = int(asyncio.run(get_response("how many jobs have I had? (Just number in numerical form)")))
+    numJobs = 0
+    for i in range(3):
+        try:
+            numJobs = int(asyncio.run(get_response("how many jobs have I had? (Just number in numerical form)")))
+            break
+        except:
+            pass
 
     for i in range(numJobs):
         single_job = {}
