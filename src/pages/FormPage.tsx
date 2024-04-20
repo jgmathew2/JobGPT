@@ -17,7 +17,6 @@ const FormPage = () => {
     }
  
     setFormData(JSON.parse(json.data))
-    setFormRead(true)
 
     setSkillIds(formData.skills);
 
@@ -28,12 +27,12 @@ const FormPage = () => {
 
       jobs.push(obj)
     }
-
     setJobIds(jobs)
+    setFormRead(true)
 
   }
 
-  getFormData();
+  if(!dataRead) getFormData();
 
   return dataRead ? (
     <div>
@@ -190,7 +189,7 @@ const FormPage = () => {
             className="column is-12"
             onClick={() => {
               setSkillIds((currentSkillIds) => {
-                return [...currentSkillIds, v4()];
+                return [...currentSkillIds, ""];
               });
             }}
           >
