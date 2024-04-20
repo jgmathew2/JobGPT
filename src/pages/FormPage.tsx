@@ -15,9 +15,8 @@ const FormPage = () => {
     while (json == null || json.data == "") {
       json = await window.ipcRenderer.invoke("form_data_from_json", {});
     }
-
-    setFormData(JSON.parse(json.data));
-    setFormRead(true);
+ 
+    setFormData(JSON.parse(json.data))
 
     setSkillIds(formData.skills);
 
@@ -28,11 +27,12 @@ const FormPage = () => {
 
       jobs.push(obj);
     }
+    setJobIds(jobs)
+    setFormRead(true)
 
-    setJobIds(jobs);
-  };
+  }
 
-  getFormData();
+  if(!dataRead) getFormData();
 
   return dataRead ? (
     <div>
@@ -237,7 +237,7 @@ const FormPage = () => {
             className="column is-12"
             onClick={() => {
               setSkillIds((currentSkillIds) => {
-                return [...currentSkillIds, v4()];
+                return [...currentSkillIds, ""];
               });
             }}
           >
