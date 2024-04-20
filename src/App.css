@@ -1,0 +1,57 @@
+/* LandingPage.css */
+.landing-page-container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #333; /* Dark background, you can put your own color */
+  color: #fff; /* White text color */
+}
+
+.header {
+  text-align: center;
+}
+
+.upload-container {
+  margin-top: 20px;
+}
+
+.upload-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 10px;
+  background: #444; /* Slightly lighter background for the button */
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+.file-info {
+  margin-top: 10px;
+}
+
+.upload-confirm-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background: #555; /* Even lighter background for the confirm button */
+  color: #fff;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+}
+
+/* Hide the actual file input, but make it accessible for screen readers */
+#resume-upload {
+  opacity: 0;
+  width: 0.1px;
+  height: 0.1px;
+  position: absolute;
+}
+
+/* Example styles for uploaded file info */
+.file-info {
+  font-style: italic;
+}
