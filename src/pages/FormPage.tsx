@@ -10,10 +10,14 @@ const FormPage = () => {
   const [dataRead, setFormRead] = useState<boolean>(false);
 
   let getFormData = async () => {
-    const json = await window.ipcRenderer.invoke("form_data_from_json", {});
 
-    setFormData(JSON.parse(json.data));
-    setFormRead(true);
+    let json = null; 
+    while(json == null || json.data == "") {
+      json = await window.ipcRenderer.invoke("form_data_from_json", {})
+    }
+ 
+    setFormData(JSON.parse(json.data))
+    setFormRead(true)
 
     setSkillIds(formData.skills);
 
