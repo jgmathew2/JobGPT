@@ -69,7 +69,8 @@ ipcMain.handle('upload_resume', async (event, { buffer }) => {
     // Define the base path for uploads relative to the application's root directory
     const file_uploader = path.join(__dirname, "../../public/python/ChatGPTDriver.py");
 
-    var process = spawn('python',["-u", file_uploader, "upload_resume"] ); 
+    var process = spawn('python3',["-u", file_uploader, "upload_resume"] ); 
+    
 
     process.stdout.on('data', function(data:any) { 
       console.log(data.toString())

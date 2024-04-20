@@ -13,6 +13,10 @@ const LinkedInForm: React.FC = () => {
 
     const navigate = useNavigate(); // Create navigate function
 
+    const handleBack = () => {
+        navigate(-1); // Go back to the previous page
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -121,6 +125,7 @@ const LinkedInForm: React.FC = () => {
                     />
                 </div>
                 <button className="column is-5 button is-dark is-rounded" style={{margin: 17}} type="submit">Submit</button>
+                <button onClick={handleBack} className="column is-5 button is-light is-rounded" style={{margin: 17}} type="button">Back</button>
                 </div>
             </form>
             <div className="columns" style={{margin: 5}}>

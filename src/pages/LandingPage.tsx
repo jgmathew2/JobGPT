@@ -32,19 +32,10 @@ const LandingPage: React.FC = () => {
         console.error("Error in IPC call:", error);
         alert("Error in saving file: " + error);
       }
-
-      try {
-        const response = await window.ipcRenderer.invoke("upload_resume", {});
-      } catch (error) {
-        console.error("Error in resume upload:", error);
-        alert("Error in resume to chatgpt: " + error);
-      }
     } else {
       console.log("No file selected.");
       alert("No file selected.");
     }
-
-    // process should run on it's own, don't need to check output
   };
 
   // Helper function to read file as ArrayBuffer
@@ -107,8 +98,6 @@ const LandingPage: React.FC = () => {
         <div className="columns is-vcentered is-centered mt-4">
           {uploadSuccess && (
             <Link to="/form">
-              {" "}
-              {/* Use Link component with "to" prop */}
               <button
                 className="column upload-confirm-button"
                 style={{ width: 100, height: 45 }}
@@ -117,6 +106,11 @@ const LandingPage: React.FC = () => {
               </button>
             </Link>
           )}
+          <Link to="/form">
+            <button className="button is-light" style={{ width: 100, height: 45, marginTop: 10 }}>
+              Skip
+            </button>
+          </Link>
         </div>
       </main>
     </div>
