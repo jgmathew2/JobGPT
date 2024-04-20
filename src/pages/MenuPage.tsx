@@ -9,7 +9,7 @@ const MenuPage: React.FC = () => {
     <div>
       <div style={{position: 'absolute', top: 10, right: 10}}>
           <button className="button is-light" onClick={() => navigate(-1)}>
-            Go Back
+            Back
           </button>
         </div>
       <div className="columns is-multiline">
