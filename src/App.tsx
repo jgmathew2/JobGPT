@@ -1,12 +1,15 @@
-import UpdateElectron from '@/components/update'
 import './App.css'
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import LandingPage from './pages/LandingPage';
 
 function App() {
   return (
-    <div className='App'>
-      <UpdateElectron />
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App
