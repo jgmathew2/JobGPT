@@ -74,7 +74,7 @@ const LandingPage: React.FC = () => {
           upload your resume and Job-GPT will take care of the rest!
         </p>
       </header>
-
+      
       <main className="upload-container">
         <div className="columns is-vcentered">
           <input
