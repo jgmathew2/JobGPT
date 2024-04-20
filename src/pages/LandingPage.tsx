@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
       try {
         const response = await window.ipcRenderer.invoke("save-file", {
           buffer: await readFileAsArrayBuffer(resumeFile),
-          filename: resumeFile.name,
+          filename: "resume.pdf",
         });
         if (response.success) {
           console.log("File saved successfully:", response.filePath);
