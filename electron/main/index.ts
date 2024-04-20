@@ -87,9 +87,9 @@ ipcMain.handle('form_data_from_json', async (event, { buffer }) => {
   
   try {
     // Define the base path for uploads relative to the application's root directory
-    const json_file = path.join(__dirname, "../../");
+    const json_file = path.join(__dirname, "../../user_info_table.json");
 
-    const data = fs.readFileSync('/Users/joe/test.txt', 'utf8');
+    const data = fs.readFileSync(json_file, 'utf8');
 
     return { success: true, data};
   } catch (err) {
