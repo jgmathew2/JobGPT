@@ -1,14 +1,14 @@
 // FormPage.tsx
 import React, { useState } from "react";
 import { v4 } from "uuid";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const FormPage = () => {
   const [skillIds, setSkillIds] = useState<string[]>([]);
   const [jobIds, setJobIds] = useState<any[]>([]);
-
   const [formData, setFormData] = useState<any | null>(null);
   const [dataRead, setFormRead] = useState<boolean>(false);
+  const navigate = useNavigate(); // Hook to access navigate function
 
   let updateFormData = async () => {
 
@@ -57,6 +57,9 @@ const FormPage = () => {
       <header className="has-text-centered">
         <h1>JOB-GPT</h1>
       </header>
+      <button className="button is-light" onClick={() => navigate(-1)}>
+        Go Back
+      </button>
       <form onSubmit={(e) => e.preventDefault()}>
         <div className="columns is-multiline is-vcentered has-text-centered">
           <div className="column is-3" style={{ margin: 10 }}>
