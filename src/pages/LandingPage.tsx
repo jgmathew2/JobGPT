@@ -74,9 +74,7 @@ const LandingPage: React.FC = () => {
           upload your resume and Job-GPT will take care of the rest!
         </p>
       </header>
-      <a href="/linkedin">
-        <button style={{ width: 100, height: 45 }}>NEXT</button>
-      </a>
+      
       <main className="upload-container">
         <div className="columns is-vcentered">
           <input
