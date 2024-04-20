@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
       try {
         const response = await window.ipcRenderer.invoke("save-file", {
           buffer: await readFileAsArrayBuffer(resumeFile),
-          filename: resumeFile.name,
+          filename: "resume.pdf",
         });
         if (response.success) {
           console.log("File saved successfully:", response.filePath);
@@ -74,7 +74,7 @@ const LandingPage: React.FC = () => {
           upload your resume and Job-GPT will take care of the rest!
         </p>
       </header>
-
+      
       <main className="upload-container">
         <div className="columns is-vcentered">
           <input

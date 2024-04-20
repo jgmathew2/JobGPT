@@ -14,7 +14,7 @@ const FormPage = () => {
     try {
       // Send the JSON data with the filename
       const response = await window.ipcRenderer.invoke("save-file", {
-          buffer: formData,
+          buffer: JSON.stringify(formData),
           filename: "user_info_table.json",
           contentType: 'application/json'
       });
@@ -24,22 +24,21 @@ const FormPage = () => {
   }
 
   let getFormData = async () => {
-
-    let json = null; 
-    while(json == null || json.data == "") {
-      json = await window.ipcRenderer.invoke("form_data_from_json", {})
+    let json = null;
+    while (json == null || json.data == "") {
+      json = await window.ipcRenderer.invoke("form_data_from_json", {});
     }
  
     setFormData(JSON.parse(json.data))
 
     setSkillIds(formData.skills);
 
-    let jobs = []
+    let jobs = [];
 
     for (const key of Object.keys(formData.job_data)) {
       let obj = formData.job_data[key];
 
-      jobs.push(obj)
+      jobs.push(obj);
     }
     setJobIds(jobs)
     setFormRead(true)
@@ -144,7 +143,7 @@ const FormPage = () => {
             ></input>
           </div>
         </div>
-        <hr style={{backgroundColor: '#454545', borderBottomWidth: 10}}></hr>
+        <hr style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}></hr>
         {jobIds.map((jobId) => {
           return (
             <div key={jobId} id={jobId}>
@@ -169,7 +168,7 @@ const FormPage = () => {
                   <input id={`jobStartMonth${jobId}`} type="text" defaultValue={jobId.start_month}
                     onChange={(e) => {jobId.start_month = e.target.value}}></input>
                 </div>
-                <div className="column is-4" style={{margin: 5}}>
+                <div className="column is-4" style={{ margin: 5 }}>
                   <label>Start Year</label>
                   <input id={`jobStartYear${jobId}`} type="text" defaultValue={jobId.start_year}
                     onChange={(e) => {jobId.start_year = e.target.value}}></input>
@@ -179,7 +178,7 @@ const FormPage = () => {
                   <input id={`jobEndMonth${jobId}`} type="text" defaultValue={jobId.end_month}
                     onChange={(e) => {jobId.end_month = e.target.value}}></input>
                 </div>
-                <div className="column is-4"> 
+                <div className="column is-4">
                   <p>End Year</p>
                   <input id={`jobEndYear${jobId}`} type="text" defaultValue={jobId.end_year}
                     onChange={(e) => {jobId.end_year = e.target.value}}></input>
@@ -188,7 +187,7 @@ const FormPage = () => {
             </div>
           );
         })}
-        <hr style={{backgroundColor: '#454545', borderBottomWidth: 10}}></hr>
+        <hr style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}></hr>
         <div className="columns is-centered">
           <button
             className="column is-12 mt-2"
@@ -229,8 +228,8 @@ const FormPage = () => {
           >
             Add Skill
           </button>
-          <Link to="/menu" onClick={() => updateFormData}>
-            <button  type="submit">Submit</button>
+          <Link to="/menu" className="column is-full">
+            <button type="submit" onClick={updateFormData} className="button is-fullwidth">Submit</button>
           </Link>
         </div>
       </form>
