@@ -1,12 +1,7 @@
 // FormPage.tsx
-<<<<<<< HEAD
-import React, {useState} from 'react';
-import { v4 } from 'uuid';
-import { Link } from 'react-router-dom';
-=======
 import React, { useState } from "react";
 import { v4 } from "uuid";
->>>>>>> 4f63574c15be119a221297f6074cff0401143b39
+import { Link } from "react-router-dom";
 
 const FormPage = () => {
   const [skillIds, setSkillIds] = useState<string[]>([]);
@@ -162,24 +157,6 @@ const FormPage = () => {
             </div>
           );
         })}
-<<<<<<< HEAD
-        <button onClick={() => {
-          setJobIds(currentJobIds => {
-            return [...currentJobIds, v4()];
-          })
-        }}>Add Job</button>
-        {skillIds.map((skillId) => {
-          return <><label>Skill: </label><input key={skillId} id={skillId} value={skillId} type="text"></input></>;
-        })}
-        <button onClick={() => {
-          setSkillIds(currentSkillIds => {
-            return [...currentSkillIds, v4()];
-          })
-        }}>Add Skill</button>
-        <Link to="/menu">
-          <button type="submit">Submit</button>
-        </Link>
-=======
         <hr style={{backgroundColor: '#454545', borderBottomWidth: 10}}></hr>
         <div className="columns is-centered">
           <button
@@ -220,8 +197,10 @@ const FormPage = () => {
           >
             Add Skill
           </button>
+          <Link to="/menu">
+            <button type="submit">Submit</button>
+          </Link>
         </div>
->>>>>>> 4f63574c15be119a221297f6074cff0401143b39
       </form>
     </div>
   ) : (
