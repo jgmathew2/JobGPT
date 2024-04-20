@@ -8,18 +8,49 @@ const LandingPage: React.FC = () => {
     const file = event.target.files ? event.target.files[0] : null;
     if (file) {
       setResumeFile(file);
-      // If you want to automatically upload the file when it's selected,
-      // call your upload function here.
     }
   };
 
-  const handleUploadClick = () => {
+  const handleUploadClick = async () => {
     if (resumeFile) {
-      // Here you would handle the file upload to your server or cloud storage
-      console.log("Uploading:", resumeFile);
+      try {
+        const response = await window.ipcRenderer.invoke("save-file", {
+          buffer: await readFileAsArrayBuffer(resumeFile),
+          filename: resumeFile.name,
+        });
+        if (response.success) {
+          console.log("File saved successfully:", response.filePath);
+          alert(`File saved successfully at ${response.filePath}`);
+        } else {
+          console.error("Failed to save file:", response.message);
+          alert("Failed to save file: " + response.message);
+        }
+      } catch (error) {
+        console.error("Error in IPC call:", error);
+        alert("Error in saving file: " + error);
+      }
     } else {
       console.log("No file selected.");
+      alert("No file selected.");
     }
+  };
+
+  // Helper function to read file as ArrayBuffer
+  const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result instanceof ArrayBuffer) {
+          resolve(reader.result);
+        } else {
+          reject(new Error("Failed to read file as ArrayBuffer"));
+        }
+      };
+      reader.onerror = () => {
+        reject(reader.error || new Error("Unknown error while reading file"));
+      };
+      reader.readAsArrayBuffer(file);
+    });
   };
 
   return (
