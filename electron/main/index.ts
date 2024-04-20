@@ -1,7 +1,6 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
 import fs from 'fs';
 import { fileURLToPath } from 'node:url'
-import {readFileSync} from 'node:fs'
 import path from 'node:path'
 import os from 'node:os'
 import { update } from './update'
@@ -41,27 +40,28 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-ipcMain.handle('save-file', async (event, { buffer, filename }) => {
-  try {
-    // Define the base path for uploads relative to the application's root directory
-    const basePath = path.join(__dirname, '../../public/uploads');
+ipcMain.handle('save-file', async (event, { buffer, filename, contentType }) => {
+    try {
+        const basePath = path.join(__dirname, '../../public/uploads');
+        if (!fs.existsSync(basePath)) {
+            fs.mkdirSync(basePath, { recursive: true });
+        }
+        const filePath = path.join(basePath, filename);
 
-    // Ensure the directory exists
-    if (!fs.existsSync(basePath)) {
-      fs.mkdirSync(basePath, { recursive: true });
+        // Write the file based on content type
+        if (contentType === 'application/json') {
+            await fs.promises.writeFile(filePath, buffer, 'utf8');
+        } else {
+            await fs.promises.writeFile(filePath, Buffer.from(buffer));
+        }
+
+        return { success: true, filePath };
+    } catch (err) {
+        console.error(`Failed to save file (ipcMain): ${err}`);
+        return { success: false, message: err.message };
     }
-
-    // Set the full path for the new file
-    const filePath = path.join(basePath, filename);
-
-    // Write the file
-    await fs.promises.writeFile(filePath, Buffer.from(buffer));
-    return { success: true, filePath };
-  } catch (err) {
-    console.error(`Failed to save file: ${err}`);
-    return { success: false, message: err.message };
-  }
 });
+
 
 ipcMain.handle('upload_resume', async (event, { buffer }) => {
   
@@ -113,7 +113,7 @@ async function createWindow() {
     webPreferences: {
       preload,
       // Warning: Enable nodeIntegration and disable contextIsolation is not secure in production
-      // nodeIntegration: true,
+      nodeIntegration: true,
 
       // Consider using contextBridge.exposeInMainWorld
       // Read more on https://www.electronjs.org/docs/latest/tutorial/context-isolation

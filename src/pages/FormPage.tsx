@@ -1,6 +1,7 @@
 // FormPage.tsx
 import React, {useState} from 'react';
 import { v4 } from 'uuid';
+import { Link } from 'react-router-dom';
 
 const FormPage = () => {
 
@@ -106,6 +107,9 @@ const FormPage = () => {
             return [...currentSkillIds, v4()];
           })
         }}>Add Skill</button>
+        <Link to="/menu">
+          <button type="submit">Submit</button>
+        </Link>
       </form>
     </div>
     :
