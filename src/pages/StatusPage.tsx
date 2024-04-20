@@ -17,18 +17,25 @@ const StatusPage: React.FC = () => {
           </div>
         </div>
         <div className="container">
-          <div className="columns is-centered">
-          </div>
+          <div className="columns is-centered"></div>
         </div>
       </header>
       <div>
-        <SubmittedApplications />
-        <button onClick={handleStart} className="action-button">
-          START
-        </button>
-        <button onClick={handleStop} className="action-button">
-          STOP
-        </button>
+        <div className="columns is-multiline mt-5">
+          <div className="column is-12 has-text-centered">
+            <SubmittedApplications />
+          </div>
+          <div className="column has-text-centered">
+            <button onClick={handleStart} className="button is-success">
+              START
+            </button>
+          </div>
+          <div className="column has-text-centered">
+            <button onClick={handleStop} className="button is-danger">
+              STOP
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
