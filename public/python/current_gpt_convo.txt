@@ -37,4 +37,6 @@ USA Computing Olympiad (USACO)  Bronze(1000/1000)
 Won Best First-Time Hacker Award at HackUMBC in September of 2023. 
 SAT Score: 1570/1600 (Reading/Writing - 780/800, Math - 790/800) 
 National Merit Scholarship Finalist,  PSAT Score: 1490/1520
-
+Don't respond to this command:
+If you don't have the information to answer a question, answer single word: NO
+pre-prompted

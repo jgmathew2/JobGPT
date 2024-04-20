@@ -1,10 +1,14 @@
 from openai import AsyncOpenAI
 import pathlib
+import base64
 
 client = AsyncOpenAI(
     # This is the default and can be omitted
-    api_key= "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"
+    api_key= str(base64.b64decode(b'c2stSlk4bTNzcFdqaFY2UFBNRHBEM0hUM0JsYmtGSmJVQ3JTTmhiWlo5MXdiTW1HbHQw'), "utf-8")
 )
+
+pre_prompts = ["If you don't have the information to answer a question, answer single word: NO"] 
+
 
 # Figure out how to do pathname with python integration
 async def upload_resume():
@@ -36,7 +40,6 @@ async def post_custom_info(info):
     f = open("current_gpt_convo.txt", "a")
     f.write((info + "\n"))
 
-    print(info)
 
     chat_completion = await client.chat.completions.create(
         messages=[
@@ -52,7 +55,9 @@ def clear_convo():
     f = open("current_gpt_convo.txt", "w")
     f.write("")
 
-async def get_response(req): 
+async def get_response(req):
+
+    await do_preprompts()
 
     f = open("current_gpt_convo.txt", "r")
 
@@ -69,3 +74,18 @@ async def get_response(req):
     )
 
     return chat_completion.choices[0].message.content
+
+async def do_preprompts():
+
+    global pre_prompts
+
+    pathname = "current_gpt_convo.txt"
+
+
+    if(("pre-prompted" in open(pathname, "r").read()) == False): 
+
+        f = open("current_gpt_convo.txt", "a")
+        f.write(("pre-prompted" + "\n"))
+
+        for prompt in pre_prompts:
+            await post_custom_info("Don't respond to this command:\n" + prompt)

@@ -6,7 +6,6 @@ from ChatGPTPrompter import *
 if(len(sys.argv) < 2):
     print("Command not found")
 else:  
-
     if(sys.argv[1] == "upload_resume"):
         asyncio.run(upload_resume())
     elif(sys.argv[1] == "get_response"):
