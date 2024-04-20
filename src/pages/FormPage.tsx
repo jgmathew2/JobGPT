@@ -12,8 +12,6 @@ const FormPage = () => {
 
   let updateFormData = async () => {
 
-    console.log(formData) 
-
     try {
       // Send the JSON data with the filename
       const response = await window.ipcRenderer.invoke("save-file", {
@@ -108,7 +106,7 @@ const FormPage = () => {
           </div>
           <div className="column is-3" style={{ margin: 10 }}>
             <label>BS/MS</label>
-            <input id="degree" type="text"
+            <input id="degree" type="text" defaultValue={ formData.degree ? formData.degree : ""}
             onChange={(e) => {formData.degree = e.target.value}}></input>
           </div>
           <div className="column is-3">
@@ -159,37 +157,41 @@ const FormPage = () => {
                 <div className="column is-3" style={{ margin: 10 }}>
                   <label>Title</label>
                   <input id={`jobTitle${jobId}`} type="text" defaultValue={jobId.position}
-                    onChange={(e) => {formData[jobId.index].position = e.target.value}}></input>
+                    onChange={(e) => {
+                      formData.job_data[jobId.index].position = e.target.value
+                      }}>
+                        
+                      </input>
                 </div>
                 <div className="column is-3">
                   <label>Company</label>
                   <input id={`jobCompany${jobId}`} type="text" defaultValue={jobId.company}
-                    onChange={(e) => {jobId.company = e.target.value}}></input>
+                    onChange={(e) => {formData.job_data[jobId.index].company = e.target.value}}></input>
                 </div>
                 <div className="column is-3">
                   <label>Location</label>
                   <input id={`jobLocation${jobId}`} type="text" defaultValue={jobId.location}
-                  onChange={(e) => {jobId.location = e.target.value}}></input>
+                  onChange={(e) => {formData.job_data[jobId.index].location = e.target.value}}></input>
                 </div>
                 <div className="column is-3">
                   <label>Start Month</label>
                   <input id={`jobStartMonth${jobId}`} type="text" defaultValue={jobId.start_month}
-                    onChange={(e) => {jobId.start_month = e.target.value}}></input>
+                    onChange={(e) => {formData.job_data[jobId.index].start_month = e.target.value}}></input>
                 </div>
                 <div className="column is-4" style={{ margin: 5 }}>
                   <label>Start Year</label>
                   <input id={`jobStartYear${jobId}`} type="text" defaultValue={jobId.start_year}
-                    onChange={(e) => {jobId.start_year = e.target.value}}></input>
+                    onChange={(e) => {formData.job_data[jobId.index].start_year = e.target.value}}></input>
                 </div>
                 <div className="column is-4">
                   <p>End Month</p>
                   <input id={`jobEndMonth${jobId}`} type="text" defaultValue={jobId.end_month}
-                    onChange={(e) => {jobId.end_month = e.target.value}}></input>
+                    onChange={(e) => {formData.job_data[jobId.index].end_month = e.target.value}}></input>
                 </div>
                 <div className="column is-4">
                   <p>End Year</p>
                   <input id={`jobEndYear${jobId}`} type="text" defaultValue={jobId.end_year}
-                    onChange={(e) => {jobId.end_year = e.target.value}}></input>
+                    onChange={(e) => {formData.job_data[jobId.index].end_year = e.target.value}}></input>
                 </div>
               </div>
             </div>
