@@ -26,12 +26,12 @@ const StatusPage: React.FC = () => {
             <SubmittedApplications />
           </div>
           <div className="column has-text-centered">
-            <button onClick={handleStart} className="button is-success">
+            <button onClick={handleStart} className="button is-success" style={{width: 100}}>
               START
             </button>
           </div>
           <div className="column has-text-centered">
-            <button onClick={handleStop} className="button is-danger">
+            <button onClick={handleStop} className="button is-danger" style={{width: 100}}>
               STOP
             </button>
           </div>

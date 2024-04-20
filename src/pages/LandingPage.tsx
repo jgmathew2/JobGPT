@@ -18,7 +18,7 @@ const LandingPage: React.FC = () => {
       try {
         const response = await window.ipcRenderer.invoke("save-file", {
           buffer: await readFileAsArrayBuffer(resumeFile),
-          filename: "resume.pdf",
+          filename: resumeFile.name,
         });
         if (response.success) {
           console.log("File saved successfully:", response.filePath);
@@ -34,18 +34,15 @@ const LandingPage: React.FC = () => {
       }
 
       try {
-        const response = await window.ipcRenderer.invoke("upload_resume", {})
+        const response = await window.ipcRenderer.invoke("upload_resume", {});
       } catch (error) {
         console.error("Error in resume upload:", error);
         alert("Error in resume to chatgpt: " + error);
       }
-
     } else {
       console.log("No file selected.");
       alert("No file selected.");
     }
-
-    
 
     // process should run on it's own, don't need to check output
   };
