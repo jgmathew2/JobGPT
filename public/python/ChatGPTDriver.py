@@ -8,7 +8,7 @@ if(len(sys.argv) < 2):
     print("Command not found")
 else:  
     if(sys.argv[1] == "upload_resume"):
-        load_user_info()
+        asyncio.run(load_user_info())
     elif(sys.argv[1] == "get_response"):
         print(asyncio.run(get_response(sys.argv[2])))
     elif(sys.argv[1] == "post_custom_info"):

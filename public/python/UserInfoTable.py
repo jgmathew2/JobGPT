@@ -5,32 +5,54 @@ import json
 user_data = {}
 
 
-def load_user_info():
+async def load_user_info():
 
     clear_convo()
+    await upload_resume()
+
+    async with asyncio.TaskGroup() as tg:
+        task1 = tg.create_task(get_response("phone number?"))
+        task2 = tg.create_task(get_response("What's my first name?"))
+        task3 = tg.create_task(get_response("What's my last name?"))
+        task4 = tg.create_task(get_response("Address?"))
+        task5 = tg.create_task(get_response("City?"))
+        task6 = tg.create_task(get_response("Which state am I from?"))
+        task7 = tg.create_task(get_response("zipcode?"))
+        task8 = tg.create_task(get_response("phone_number"))
+        task9 = tg.create_task(get_response("What is my college major?"))
+        task10 = tg.create_task(get_response("Which school am I studying at?"))
+        task11 = tg.create_task(get_response("school start year?(just year)"))
+        task12 = tg.create_task(get_response("school start month?"))
+        task13 = tg.create_task(get_response("school end month?"))
+        task14 = tg.create_task(get_response("school end year?(just year)"))
+        task15 = tg.create_task(get_response("List all of my skills separated by commas"))
+        task16 = tg.create_task(get_response("What is my LinkedIn id (content after /in/ in href)"))
 
 
-    asyncio.run(upload_resume())
-    user_data["phone_number"] = asyncio.run(get_response("phone number?"))
-    user_data["first_name"] = asyncio.run(get_response("What's my first name?"))
-    user_data["last_name"] = asyncio.run(get_response("What's my last name?"))
+    user_data["phone_number"] = task1.result()
+    user_data["first_name"] = task2.result()
+    user_data["last_name"] = task3.result()
+    user_data["address"] = task4.result()
+    user_data["city"] = task5.result()
+    user_data["state"] = task6.result()
+    user_data["zipcode"] = task7.result()
+    user_data["phone_number"] = task8.result()
+    user_data["studying"] = task9.result()
+    user_data["school"] = task10.result()
+    user_data["school_start_year"] = task11.result()
+    user_data["school_start_month"] = task12.result()
+    user_data["school end month?"] = task13.result()
+    user_data["school_end_year"] = task14.result()
+    user_data["skills"] = task15.result().split(",")
+    user_data["linkedin"] = task16.result()
 
-
-    user_data["address"] = asyncio.run(get_response("Address?"))
-
-    user_data["city"] = asyncio.run(get_response("City?"))
-    user_data["state"] = asyncio.run(get_response("Which state am I from?"))
-    user_data["zipcode"] = asyncio.run(get_response("zipcode?"))
-    user_data["phone_number"] = asyncio.run(get_response("phone number?"))
-    user_data["studying"] = asyncio.run(get_response("What is my college major?"))
-    user_data["school"] = asyncio.run(get_response("Which school am I studying at?"))
 
 
     job_data = {}
     numJobs = 0
     for i in range(3):
         try:
-            numJobs = int(asyncio.run(get_response("how many jobs have I had? (Just number in numerical form)")))
+            numJobs = int( await get_response("how many jobs have I had? (Just number in numerical form)"))
             break
         except:
             pass
@@ -38,27 +60,28 @@ def load_user_info():
     for i in range(numJobs):
         single_job = {}
 
-        single_job["start_month"] = asyncio.run(get_response("start month of job " + str(i) + "?"))
-        single_job["end_month"] = asyncio.run(get_response("end month of job " + str(i) + "?"))
+        async with asyncio.TaskGroup() as tg:
+            job1 = tg.create_task(get_response("start month of job " + str(i) + "?"))
+            job2 = tg.create_task(get_response("end month of job " + str(i) + "?"))
+            job3 = tg.create_task(get_response("start year of job " + str(i) + "?(just year)"))
+            job4 = tg.create_task(get_response("end year of job " + str(i) + "?(just year)"))
+            job5 = tg.create_task(get_response("company of job" + str(i) + "?"))
+            job6 = tg.create_task(get_response("position title of job" + str(i) + "?"))
+            job7 = tg.create_task(get_response("What was the location of company" + str(i) + " that I worked at?"))
 
-        single_job["start_year"] = asyncio.run(get_response("start year of job " + str(i) + "?(just year)"))
-        single_job["end_year"] = asyncio.run(get_response("end year of job " + str(i) + "?(just year)"))
-        single_job["company"] = asyncio.run(get_response("company of job" + str(i) + "?"))
-        single_job["position"] = asyncio.run(get_response("position title of job" + str(i) + "?"))
-        single_job["location"] = asyncio.run(get_response("What was the location of company" + str(i) + " that I worked at?"))
+
+        single_job["start_month"] = job1.result()
+        single_job["end_month"] = job2.result()
+        single_job["start_year"] = job3.result()
+        single_job["end_year"] = job4.result()
+        single_job["company"] = job5.result()
+        single_job["position"] = job6.result()
+        single_job["location"] = job7.result()
 
 
         job_data[str(i)] = single_job
-
+    
     user_data["job_data"] = job_data
-    user_data["school_start_year"] = asyncio.run(get_response("school start year?(just year)"))
-    user_data["school_start_month"] = asyncio.run(get_response("school start month?"))
-    user_data["school_end_month"] = asyncio.run(get_response("school end month?"))
-    user_data["school_end_year"] = asyncio.run(get_response("school end year?(just year)"))
-
-    user_data["skills"] = asyncio.run(get_response("List all of my skills separated by commas")).split(",")
-
-    user_data["linkedin"] = asyncio.run(get_response("What is my LinkedIn id (content after /in/ in href)"))
 
     write_to_file()
 
