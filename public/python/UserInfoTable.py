@@ -68,6 +68,7 @@ async def load_user_info():
             job5 = tg.create_task(get_response("company of job" + str(i) + "?"))
             job6 = tg.create_task(get_response("position title of job" + str(i) + "?"))
             job7 = tg.create_task(get_response("What was the location of company" + str(i) + " that I worked at?"))
+            job8 = tg.create_task(get_response("What is the description for my job" + str(i)) + "?")
 
 
         single_job["start_month"] = job1.result()
@@ -77,7 +78,7 @@ async def load_user_info():
         single_job["company"] = job5.result()
         single_job["position"] = job6.result()
         single_job["location"] = job7.result()
-
+        single_job["description"] = job8.result()
 
         job_data[str(i)] = single_job
     

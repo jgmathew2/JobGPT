@@ -12,6 +12,8 @@ const FormPage = () => {
 
   let updateFormData = async () => {
 
+    console.log(formData) 
+
     try {
       // Send the JSON data with the filename
       const response = await window.ipcRenderer.invoke("save-file", {
@@ -38,6 +40,8 @@ const FormPage = () => {
 
     for (const key of Object.keys(formData.job_data)) {
       let obj = formData.job_data[key];
+
+      obj.index = key
 
       jobs.push(obj);
     }
@@ -152,7 +156,7 @@ const FormPage = () => {
                 <div className="column is-3" style={{ margin: 10 }}>
                   <label>Title</label>
                   <input id={`jobTitle${jobId}`} type="text" defaultValue={jobId.position}
-                    onChange={(e) => {jobId.position = e.target.value}}></input>
+                    onChange={(e) => {formData[jobId.index].position = e.target.value}}></input>
                 </div>
                 <div className="column is-3">
                   <label>Company</label>
