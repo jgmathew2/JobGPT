@@ -236,7 +236,7 @@ const FormPage = () => {
       </form>
     </div>
   ) : (
-    <div className="columns has-text-centered">Form data is loading from your resume submission ... </div>
+    <div className="columns is-centered">Form data is loading from your resume submission ... </div>
   );
 };
 
