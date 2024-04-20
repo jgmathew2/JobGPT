@@ -20,9 +20,12 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
   },
 
   saveFile: (buffer, filename) => ipcRenderer.invoke('save-file', { buffer, filename }),
+
+  uploadResume: () => ipcRenderer.invoke('upload_resume', {} )
   // You can expose other APTs you need here.
   // ...
 })
+
 
 // --------- Preload scripts loading ---------
 function domReady(condition: DocumentReadyState[] = ['complete', 'interactive']) {

@@ -4,6 +4,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
 import { update } from './update'
+import {spawn} from 'node:child_process'
 
 globalThis.__filename = fileURLToPath(import.meta.url)
 globalThis.__dirname = path.dirname(__filename)
@@ -57,6 +58,26 @@ ipcMain.handle('save-file', async (event, { buffer }) => {
     return { success: true, filePath };
   } catch (err) {
     console.error(`Failed to save file: ${err}`);
+    return { success: false, message: err.message };
+  }
+});
+
+ipcMain.handle('upload_resume', async (event, { buffer }) => {
+  
+  try {
+    // Define the base path for uploads relative to the application's root directory
+    const file_uploader = path.join(__dirname, "../../public/python/ChatGPTDriver.py");
+
+    var process = spawn('python',[file_uploader, "upload_resume"] ); 
+
+    process.stdout.on('data', function(data:any) { 
+      console.log(data)
+    }) 
+
+
+    return { success: true};
+  } catch (err) {
+    console.error(`Failed to upload resume: ${err}`);
     return { success: false, message: err.message };
   }
 });
