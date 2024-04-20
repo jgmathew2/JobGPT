@@ -26,7 +26,7 @@ p {
   display: inline-block;
   padding: 10px 20px;
   margin: 10px;
-  background: #444; /* Slightly lighter background for the button */
+  background: #555; /* Slightly lighter background for the button */
   color: #fff;
   cursor: pointer;
   border: none;

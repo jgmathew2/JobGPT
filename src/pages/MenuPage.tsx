@@ -8,15 +8,15 @@ const MenuPage: React.FC = () => {
         <h1>JOB-GPT</h1>
         <p>Choose Application Type:</p>
       </header>
-      <div className="columns has-text-centered buttons-container">
-        <div className="column">
-          <button className="menu-button">WORKDAY</button>
+      <div className="columns is-vcentered is-variable is-multiline is-centered buttons-container">
+        <div className="column is-3">
+          <button className="menu-button button is-primary">WORKDAY</button>
+        </div>
+        <div className="column is-3">
+          <button className="menu-button button is-link">GREENHOUSE</button>
         </div>
         <div className="column">
-          <button className="menu-button">GREENHOUSE</button>
-        </div>
-        <div className="column">
-          <button className="menu-button long">LINKEDIN EASY-APPLY</button>
+          <button className="menu-button long button is-info">LINKEDIN EASY-APPLY</button>
         </div>
       </div>
     </div>
