@@ -21,7 +21,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   saveFile: (buffer, filename) => ipcRenderer.invoke('save-file', { buffer, filename }),
 
-  uploadResume: () => ipcRenderer.invoke('upload_resume', {} )
+  uploadResume: () => ipcRenderer.invoke('upload_resume', {} ),
+
+  getFormData: () => ipcRenderer.invoke("form_data_from_json", {})
   // You can expose other APTs you need here.
   // ...
 })

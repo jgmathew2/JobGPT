@@ -18,6 +18,8 @@ pre_prompts = ["If you don't have the information to answer a question, answer s
 # Figure out how to do pathname with python integration
 async def upload_resume():
 
+    print("Hello")
+
     pathname = str(pathlib.Path(__file__).parent.resolve())
 
 
