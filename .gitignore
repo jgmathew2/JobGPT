@@ -32,4 +32,7 @@ yarn.lock
 /playwright-report/
 /playwright/.cache/
 
+# project specific
 /public/uploads/*
+user_info_table.json
+current_gpt_convo.txt
