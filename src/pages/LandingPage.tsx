@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 const LandingPage: React.FC = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false); // State to track upload success
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Access the files with event.target.files
@@ -21,6 +23,7 @@ const LandingPage: React.FC = () => {
         if (response.success) {
           console.log("File saved successfully:", response.filePath);
           alert(`File saved successfully at ${response.filePath}`);
+          setUploadSuccess(true); // Set upload success state to true
         } else {
           console.error("Failed to save file:", response.message);
           alert("Failed to save file: " + response.message);
@@ -85,6 +88,16 @@ const LandingPage: React.FC = () => {
         >
           SUBMIT
         </button>
+        {uploadSuccess && (
+          <Link to="/form"> {/* Use Link component with "to" prop */}
+            <button
+              className="upload-confirm-button"
+              style={{ width: 100, height: 45 }}
+            >
+              NEXT
+            </button>
+          </Link>
+        )}
       </main>
     </div>
   );
