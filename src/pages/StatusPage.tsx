@@ -12,11 +12,17 @@ const StatusPage: React.FC = () => {
   const handleStop = () => {};
 
   const handleBack = () => {
+    handleStop();
     navigate(-1); // Navigate back to the previous page
   };
 
   return (
     <div style={{ placeItems: "normal" }}>
+      <div style={{position: 'absolute', top: 10, right: 10}}>
+          <button className="button is-light" onClick={handleBack}>
+            Back
+          </button>
+        </div>
       <header>
         <div className="container">
           <div className="columns">
@@ -40,11 +46,6 @@ const StatusPage: React.FC = () => {
           <div className="column has-text-centered">
             <button onClick={handleStop} className="button is-danger" style={{width: 100}}>
               STOP
-            </button>
-          </div>
-          <div className="column has-text-centered">
-            <button onClick={handleBack} className="button is-light" style={{width: 100, marginTop: 10}}>
-              BACK
             </button>
           </div>
         </div>

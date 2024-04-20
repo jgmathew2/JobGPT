@@ -58,6 +58,15 @@ const LandingPage: React.FC = () => {
 
   return (
     <div className="landing-page-container">
+      <div style={{ position: "absolute", top: 10, right: 10 }}>
+        <Link to="/form">
+          <button
+            className="button is-light"
+          >
+            Skip
+          </button>
+        </Link>
+      </div>
       <header className="header">
         <h1>JOB-GPT</h1>
         <p style={{ fontFamily: "Ligconsolata", margin: 40 }}>
@@ -65,7 +74,7 @@ const LandingPage: React.FC = () => {
           upload your resume and Job-GPT will take care of the rest!
         </p>
       </header>
-      
+
       <main className="upload-container">
         <div className="columns is-vcentered">
           <input
@@ -106,11 +115,6 @@ const LandingPage: React.FC = () => {
               </button>
             </Link>
           )}
-          <Link to="/form">
-            <button className="button is-light" style={{ width: 100, height: 45, marginTop: 10 }}>
-              Skip
-            </button>
-          </Link>
         </div>
       </main>
     </div>

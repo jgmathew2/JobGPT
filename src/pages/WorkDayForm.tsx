@@ -44,80 +44,81 @@ const WorkDayForm: React.FC = () => {
   };
 
   return (
+    <div>
+        <div style={{position: 'absolute', top: 10, right: 10}}>
+          <button className="button is-light" onClick={() => navigate(-1)}>
+            Back
+          </button>
+        </div>
     <div className="columns is-multiline">
-      <header className="column is-full has-text-centered">
-        <h1>JOB-GPT</h1>
-      </header>
+      <div className="column is-full has-text-centered">
+        <header>
+          <h1>JOB-GPT</h1>
+        </header>
+      </div>
       <form onSubmit={handleSubmit}>
-        <div className="column is-full">
-          <label style={{ margin: 15 }}>Preferred Login Email:</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+        <div style={{ margin: 15 }}>
+          <div className="column is-full">
+            <label>Preferred Login Email:</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="column is-full">
+            <label>Preferred Login Password:</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <div className="column is-full">
+            <label>Role:</label>
+            <input
+              type="text"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+            />
+          </div>
+          <div className="column is-full">
+            <label>Location:</label>
+            <input
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              required
+            />
+          </div>
+          <div className="column is-full">
+            <label>Season:</label>
+            <select
+              value={season}
+              onChange={(e) => setSeason(e.target.value)}
+              required
+            >
+              <option value="">Select a season</option>
+              <option value="Off Season">Off Season</option>
+              <option value="Summer 2024">Summer 2024</option>
+            </select>
+          </div>
         </div>
-        <div className="column is-full">
-          <label style={{ margin: 15 }}>Preferred Login Password:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+        <div className="column is-5" style={{margin: 12}}>
+          <button className="button is-dark is-rounded" type="submit">
+            Submit
+          </button>
         </div>
-        <div className="column is-full">
-          <label style={{ margin: 15 }}>Role:</label>
-          <input
-            type="text"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            required
-          />
-        </div>
-        <div className="column is-full">
-          <label style={{ margin: 15 }}>Location:</label>
-          <input
-            type="text"
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            required
-          />
-        </div>
-        <div className="column is-full">
-          <label style={{ margin: 15 }}>Season:</label>
-          <select
-            value={season}
-            onChange={(e) => setSeason(e.target.value)}
-            required
-          >
-            <option value="">Select a season</option>
-            <option value="Off Season">Off Season</option>
-            <option value="Summer 2024">Summer 2024</option>
-          </select>
-        </div>
-        <button
-          className="column is-5 button is-dark is-rounded"
-          style={{ marginLeft: 25, marginTop: 10 }}
-          type="submit"
-        >
-          Submit
-        </button>
-        <button
-          className="button is-light"
-          type="button"
-          onClick={handleBack}
-          style={{ marginLeft: 10, marginTop: 10 }}
-        >
-          Back
-        </button>
       </form>
       <div className="columns" style={{ margin: 5 }}>
-        <div className="column" style={{ margin: 5 }}>
+        <div className="column">
           {message && <p>{message}</p>}
         </div>
       </div>
+    </div>
     </div>
   );
 };
