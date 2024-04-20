@@ -36,3 +36,4 @@ yarn.lock
 /public/uploads/*
 user_info_table.json
 current_gpt_convo.txt
+venv/
