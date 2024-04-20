@@ -18,6 +18,10 @@
   margin-top: 20px;
 }
 
+p {
+  font-family: "Ligconsolata", sans-serif
+}
+
 .upload-button {
   display: inline-block;
   padding: 10px 20px;
@@ -36,7 +40,6 @@
 .upload-confirm-button {
   display: inline-block;
   padding: 10px 20px;
-  font-family: 'Koulen';
   background: #555; /* Even lighter background for the confirm button */
   color: #fff;
   cursor: pointer;
