@@ -12,13 +12,14 @@ const StatusPage: React.FC = () => {
   const handleStop = () => {};
 
   const handleBack = () => {
+    handleStop();
     navigate(-1); // Navigate back to the previous page
   };
 
   return (
     <div style={{ placeItems: "normal" }}>
       <div style={{position: 'absolute', top: 10, right: 10}}>
-          <button className="button is-light" onClick={() => navigate(-1)}>
+          <button className="button is-light" onClick={handleBack}>
             Back
           </button>
         </div>
