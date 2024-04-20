@@ -12,19 +12,17 @@ const MenuPage: React.FC = () => {
         </header>
       </div>
       <div className="column is-full has-text-centered">
-        <Link to="/LinkedInForm">
+        <Link to="/linkedin">
           <button className="button is-info">LINKEDIN EASY-APPLY</button>
         </Link>
       </div>
       <div className="column is-full has-text-centered">
-        <Link to="/WorkDayForm"></Link>
-        <button className="button is-primary ">
-          WORKDAY (TECH INTERNSHIPS)
-        </button>
+        <Link to="/workday">
+            <button className="button is-primary ">
+                WORKDAY (TECH INTERNSHIPS)
+            </button>
+        </Link>
       </div>
-      {/* <div className="column">
-          <button className="button is-link">GREENHOUSE</button>
-        </div> */}
     </div>
   );
 };
