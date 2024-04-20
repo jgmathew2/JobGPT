@@ -66,3 +66,7 @@ p {
   font-weight: 400;
   src: local('Ligconsolata'), url('https://fonts.cdnfonts.com/s/107278/Ligconsolata-Regular.woff') format('woff');
 }
+
+#root {
+  min-width: 100%;
+}

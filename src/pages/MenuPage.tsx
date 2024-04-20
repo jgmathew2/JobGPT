@@ -3,20 +3,22 @@ import React from "react";
 
 const MenuPage: React.FC = () => {
   return (
-    <div className="menu-page has-text-centered">
-      <header className="menu-header">
-        <h1>JOB-GPT</h1>
-        <p>Choose Application Type:</p>
-      </header>
-      <div className="columns is-vcentered is-variable is-multiline is-centered buttons-container">
-        <div className="column is-3">
-          <button className="menu-button button is-primary">WORKDAY</button>
-        </div>
-        <div className="column is-3">
-          <button className="menu-button button is-link">GREENHOUSE</button>
+    <div>
+      <div className="columns is-centered">
+        <header className="columnn">
+          <h1>JOB-GPT</h1>
+          <p className="mt-16">Choose Application Type:</p>
+        </header>
+      </div>
+      <div className="columns mt-4 has-text-centered">
+        <div className="column">
+          <button className="button is-primary ">WORKDAY</button>
         </div>
         <div className="column">
-          <button className="menu-button long button is-info">LINKEDIN EASY-APPLY</button>
+          <button className="button is-link">GREENHOUSE</button>
+        </div>
+        <div className="column">
+          <button className="button is-info">LINKEDIN EASY-APPLY</button>
         </div>
       </div>
     </div>

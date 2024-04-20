@@ -65,8 +65,9 @@ const LandingPage: React.FC = () => {
           upload your resume and Job-GPT will take care of the rest!
         </p>
       </header>
+
       <main className="upload-container">
-        <div className="columns is-vcentered is-multiline">
+        <div className="columns is-vcentered">
           <input
             type="file"
             id="resume-upload"
@@ -90,21 +91,23 @@ const LandingPage: React.FC = () => {
           </button>
         </div>
         {resumeFile && (
-            <p className="file-info has-text-centered">{resumeFile.name} uploaded</p>
-          )}
-        <div className="columns is-vcentered is-centered mt-4">
-        {uploadSuccess && (
-          <Link to="/form">
-            {" "}
-            {/* Use Link component with "to" prop */}
-            <button
-              className="column upload-confirm-button"
-              style={{ width: 100, height: 45 }}
-            >
-              NEXT
-            </button>
-          </Link>
+          <p className="file-info has-text-centered">
+            {resumeFile.name} uploaded
+          </p>
         )}
+        <div className="columns is-vcentered is-centered mt-4">
+          {uploadSuccess && (
+            <Link to="/form">
+              {" "}
+              {/* Use Link component with "to" prop */}
+              <button
+                className="column upload-confirm-button"
+                style={{ width: 100, height: 45 }}
+              >
+                NEXT
+              </button>
+            </Link>
+          )}
         </div>
       </main>
     </div>
