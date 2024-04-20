@@ -11,11 +11,12 @@ const FormPage = () => {
   const [dataRead, setFormRead] = useState<boolean>(false);
 
   let updateFormData = async () => {
+
     try {
       // Send the JSON data with the filename
       const response = await window.ipcRenderer.invoke("save-file", {
           buffer: JSON.stringify(formData),
-          filename: "user_info_table.json",
+          filename: "/../../user_info_table.json",
           contentType: 'application/json'
       });
     }
