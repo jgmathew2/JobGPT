@@ -72,44 +72,55 @@ const LandingPage: React.FC = () => {
     <div className="landing-page-container">
       <header className="header">
         <h1>JOB-GPT</h1>
-        <p style={{ fontFamily: "Ligconsolata" }}>
+        <p style={{ fontFamily: "Ligconsolata", margin: 40 }}>
           Apply to dozens of jobs, instantly with the click of a button. Just
           upload your resume and Job-GPT will take care of the rest!
         </p>
       </header>
+
       <main className="upload-container">
-        <input
-          type="file"
-          id="resume-upload"
-          onChange={handleFileChange}
-          accept=".pdf"
-          hidden
-        />
-        <label
-          htmlFor="resume-upload"
-          className="upload-button"
-          style={{ width: 100, height: 45 }}
-        >
-          UPLOAD
-        </label>
-        {resumeFile && <p className="file-info">{resumeFile.name} uploaded</p>}
-        <button
-          onClick={handleUploadClick}
-          className="upload-confirm-button"
-          style={{ width: 100, height: 45 }}
-        >
-          SUBMIT
-        </button>
-        {uploadSuccess && (
-          <Link to="/form"> {/* Use Link component with "to" prop */}
-            <button
-              className="upload-confirm-button"
-              style={{ width: 100, height: 45 }}
-            >
-              NEXT
-            </button>
-          </Link>
+        <div className="columns is-vcentered">
+          <input
+            type="file"
+            id="resume-upload"
+            onChange={handleFileChange}
+            accept=".pdf"
+            hidden
+          />
+          <label
+            htmlFor="resume-upload"
+            className="column upload-button has-text-centered"
+            style={{ width: 100, height: 45 }}
+          >
+            UPLOAD
+          </label>
+          <button
+            onClick={handleUploadClick}
+            className="column upload-confirm-button"
+            style={{ width: 100, height: 45 }}
+          >
+            SUBMIT
+          </button>
+        </div>
+        {resumeFile && (
+          <p className="file-info has-text-centered">
+            {resumeFile.name} uploaded
+          </p>
         )}
+        <div className="columns is-vcentered is-centered mt-4">
+          {uploadSuccess && (
+            <Link to="/form">
+              {" "}
+              {/* Use Link component with "to" prop */}
+              <button
+                className="column upload-confirm-button"
+                style={{ width: 100, height: 45 }}
+              >
+                NEXT
+              </button>
+            </Link>
+          )}
+        </div>
       </main>
     </div>
   );
