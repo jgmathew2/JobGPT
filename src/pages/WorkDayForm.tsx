@@ -30,7 +30,7 @@ const WorkDayForm: React.FC = () => {
             });
             if (response.success) {
                 setMessage('Data saved successfully!');
-                navigate('/StatusPage'); // Redirect to the success page
+                navigate('/status'); // Redirect to the success page
             } else {
                 setMessage(`Failed to save data: ${response.message}`);
             }
