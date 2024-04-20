@@ -19,6 +19,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     return ipcRenderer.invoke(channel, ...omit)
   },
 
+  saveFile: (buffer, filename) => ipcRenderer.invoke('save-file', { buffer, filename }),
   // You can expose other APTs you need here.
   // ...
 })

@@ -1,4 +1,5 @@
 import { app, BrowserWindow, shell, ipcMain } from 'electron'
+import fs from 'fs';
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
@@ -37,6 +38,29 @@ if (!app.requestSingleInstanceLock()) {
   app.quit()
   process.exit(0)
 }
+
+ipcMain.handle('save-file', async (event, { buffer }) => {
+  try {
+    // Define the base path for uploads relative to the application's root directory
+    const basePath = path.join(__dirname, '../../public/uploads');
+
+    // Ensure the directory exists
+    if (!fs.existsSync(basePath)) {
+      fs.mkdirSync(basePath, { recursive: true });
+    }
+
+    // Set the full path for the new file
+    const filePath = path.join(basePath, "resume.pdf");
+
+    // Write the file
+    await fs.promises.writeFile(filePath, Buffer.from(buffer));
+    return { success: true, filePath };
+  } catch (err) {
+    console.error(`Failed to save file: ${err}`);
+    return { success: false, message: err.message };
+  }
+});
+
 
 let win: BrowserWindow | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
@@ -113,6 +137,7 @@ ipcMain.handle('open-win', (_, arg) => {
       contextIsolation: false,
     },
   })
+
 
   if (VITE_DEV_SERVER_URL) {
     childWindow.loadURL(`${VITE_DEV_SERVER_URL}#${arg}`)
