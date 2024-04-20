@@ -10,7 +10,7 @@ const SubmittedApplications: React.FC = () => {
 
   const ScrollableContent: React.FC = () => {
     return (
-      <div style={{ overflowY: 'auto', height: '100%', width: '100%' }}>
+      <div style={{ overflowY: 'auto', height: '100%', width: '100%', borderRadius: 10}}>
         {companyList.map((company, index) => (
           <div key={index}>{company}</div>
         ))}
@@ -25,7 +25,7 @@ const SubmittedApplications: React.FC = () => {
   return (
     <iframe
       srcDoc={iframeSrcDoc}
-      style={{ width: '100%', height: '400px', border: 'none' }}
+      style={{ width: '75%', height: '300px', border: 'none', borderRadius: 10, background: "#464545"}}
       sandbox="allow-scripts allow-same-origin"
     />
   );
