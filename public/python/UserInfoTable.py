@@ -23,6 +23,8 @@ def load_user_info():
     user_data["zipcode"] = asyncio.run(get_response("zipcode?"))
     user_data["phone_number"] = asyncio.run(get_response("phone number?"))
     user_data["studying"] = asyncio.run(get_response("What is my college major?"))
+    user_data["school"] = asyncio.run(get_response("Which school am I studying at?"))
+
 
     job_data = {}
     numJobs = 0

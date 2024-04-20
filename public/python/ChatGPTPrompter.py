@@ -65,6 +65,8 @@ async def post_custom_info(info):
 def clear_convo():
     f = open("current_gpt_convo.txt", "w")
     f.write("")
+    f2 = open("user_info_table.json", "w")
+    f2.write("")
 
 async def get_response(req):
 

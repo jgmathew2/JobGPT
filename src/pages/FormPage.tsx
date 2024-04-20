@@ -13,7 +13,11 @@ const FormPage = () => {
 
 
   let getFormData = async () => {
-    const json = await window.ipcRenderer.invoke("form_data_from_json", {})
+
+    let json = null; 
+    while(json == null || json.data == "") {
+      json = await window.ipcRenderer.invoke("form_data_from_json", {})
+    }
  
     setFormData(JSON.parse(json.data))
     setFormRead(true)
@@ -61,11 +65,11 @@ const FormPage = () => {
         <label>Phone number</label>
         <input id="phone" type="text" value={formData.phone_number}></input>
         <label>School</label>
-        <input id="school" type="text"></input>
+        <input id="school" type="text" value={formData.school}></input>
         <label>BS/MS</label>
-        <input id="degree" type="text" value={formData.studying}></input>
+        <input id="degree" type="text"></input>
         <label>Field of Study</label>
-        <input id="field" type="text"></input>
+        <input id="field" type="text" value={formData.studying}></input>
         <label>Start Month</label>
         <input id="eduStartMonth" type="text" value={formData.school_start_month}></input>
         <label>Start Year</label>
