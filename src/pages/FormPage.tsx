@@ -49,16 +49,16 @@ const FormPage = () => {
   return dataRead ? (
     <div>
       <div className="columns">
-      <div className="column is-2"></div>
+        <div className="column is-2"></div>
         <div className="column has-text-centered is-8">
           <header>
             <h1>JOB-GPT</h1>
           </header>
         </div>
-        <div className="column has-text-right is-2" style={{marginTop: 12}}>
-        <button className="button is-light" onClick={() => navigate(-1)}>
-          Back
-        </button>
+        <div className="column has-text-right is-2" style={{ marginTop: 12 }}>
+          <button className="button is-light" onClick={() => navigate(-1)}>
+            Back
+          </button>
         </div>
       </div>
       <form onSubmit={(e) => e.preventDefault()}>
@@ -242,7 +242,7 @@ const FormPage = () => {
                     onChange={(e) => {formData.job_data[jobId.index].start_month = e.target.value}}></input>
                 </div>
                 <div className="column is-4" style={{ margin: 5 }}>
-                  <label>Start Year</label>
+                  <p>Start Year</p>
                   <input id={`jobStartYear${jobId}`} type="text" defaultValue={jobId.start_year}
                     onChange={(e) => {formData.job_data[jobId.index].start_year = e.target.value}}></input>
                 </div>
