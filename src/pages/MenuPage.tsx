@@ -1,5 +1,6 @@
 // MenuPage.tsx
 import React from "react";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
 
 const MenuPage: React.FC = () => {
   return (
@@ -12,13 +13,17 @@ const MenuPage: React.FC = () => {
       </div>
       <div className="columns mt-4 has-text-centered">
         <div className="column">
-          <button className="button is-primary ">WORKDAY (SWE INTERNSHIPS)</button>
+            <Link to="/WorkDayForm">
+            </Link>
+          <button className="button is-primary ">WORKDAY (TECH INTERNSHIPS)</button>
         </div>
         {/* <div className="column">
           <button className="button is-link">GREENHOUSE</button>
         </div> */}
         <div className="column">
-          <button className="button is-info">LINKEDIN EASY-APPLY</button>
+            <Link to="/LinkedInForm">
+                <button className="button is-info">LINKEDIN EASY-APPLY</button>
+            </Link>
         </div>
       </div>
     </div>

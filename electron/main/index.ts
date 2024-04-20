@@ -40,7 +40,7 @@ if (!app.requestSingleInstanceLock()) {
   process.exit(0)
 }
 
-ipcMain.handle('save-file', async (event, { buffer }) => {
+ipcMain.handle('save-file', async (event, { buffer, filename }) => {
   try {
     // Define the base path for uploads relative to the application's root directory
     const basePath = path.join(__dirname, '../../public/uploads');
@@ -51,7 +51,7 @@ ipcMain.handle('save-file', async (event, { buffer }) => {
     }
 
     // Set the full path for the new file
-    const filePath = path.join(basePath, "resume.pdf");
+    const filePath = path.join(basePath, filename);
 
     // Write the file
     await fs.promises.writeFile(filePath, Buffer.from(buffer));

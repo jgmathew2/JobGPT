@@ -5,6 +5,7 @@ import LandingPage from './pages/LandingPage';
 import MenuPage from './pages/MenuPage';
 import FormPage from './pages/FormPage';
 import StatusPage from './pages/StatusPage';
+import LinkedInForm from './pages/LinkedInForm';
 
 function App() {
   return (
@@ -13,6 +14,8 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/form" element={<FormPage />} />
         <Route path="/menu" element={<MenuPage />} />
+        <Route path="/linkedin" element={<LinkedInForm />} />
+        <Route path="/workday" element={<MenuPage />} />
         <Route path="/status" element={<StatusPage />} />
       </Routes>
     </BrowserRouter>
