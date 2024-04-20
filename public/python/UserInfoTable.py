@@ -43,6 +43,10 @@ def load_user_info():
 
         single_job["start_year"] = asyncio.run(get_response("start year of job " + str(i) + "?(just year)"))
         single_job["end_year"] = asyncio.run(get_response("end year of job " + str(i) + "?(just year)"))
+        single_job["company"] = asyncio.run(get_response("company of job" + str(i) + "?"))
+        single_job["position"] = asyncio.run(get_response("position title of job" + str(i) + "?"))
+        single_job["location"] = asyncio.run(get_response("What was the location of company" + str(i) + " that I worked at?"))
+
 
         job_data[str(i)] = single_job
 
