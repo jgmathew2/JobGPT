@@ -11,28 +11,26 @@ const FormPage = () => {
   const [dataRead, setFormRead] = useState<boolean>(false);
 
   let getFormData = async () => {
-
-    let json = null; 
-    while(json == null || json.data == "") {
-      json = await window.ipcRenderer.invoke("form_data_from_json", {})
+    let json = null;
+    while (json == null || json.data == "") {
+      json = await window.ipcRenderer.invoke("form_data_from_json", {});
     }
- 
-    setFormData(JSON.parse(json.data))
-    setFormRead(true)
+
+    setFormData(JSON.parse(json.data));
+    setFormRead(true);
 
     setSkillIds(formData.skills);
 
-    let jobs = []
+    let jobs = [];
 
     for (const key of Object.keys(formData.job_data)) {
       let obj = formData.job_data[key];
 
-      jobs.push(obj)
+      jobs.push(obj);
     }
 
-    setJobIds(jobs)
-
-  }
+    setJobIds(jobs);
+  };
 
   getFormData();
 
@@ -53,11 +51,19 @@ const FormPage = () => {
           </div>
           <div className="column is-3">
             <label>Last Name: </label>
-            <input id="lastName" type="text" defaultValue={formData.last_name}></input>
+            <input
+              id="lastName"
+              type="text"
+              defaultValue={formData.last_name}
+            ></input>
           </div>
           <div className="column is-3">
             <label>Address: </label>
-            <input id="address" type="text" defaultValue={formData.address}></input>
+            <input
+              id="address"
+              type="text"
+              defaultValue={formData.address}
+            ></input>
           </div>
           <div className="column is-3">
             <label>City: </label>
@@ -69,11 +75,19 @@ const FormPage = () => {
           </div>
           <div className="column is-3">
             <label>Zipcode</label>
-            <input id="zipcode" type="text" defaultValue={formData.zipcode}></input>
+            <input
+              id="zipcode"
+              type="text"
+              defaultValue={formData.zipcode}
+            ></input>
           </div>
           <div className="column is-3">
             <label>Phone number</label>
-            <input id="phone" type="text" defaultValue={formData.phone_number}></input>
+            <input
+              id="phone"
+              type="text"
+              defaultValue={formData.phone_number}
+            ></input>
           </div>
           <div className="column is-3">
             <label>School</label>
@@ -85,7 +99,11 @@ const FormPage = () => {
           </div>
           <div className="column is-3">
             <label>Field of Study</label>
-            <input id="field" type="text" defaultValue={formData.studying}></input>
+            <input
+              id="field"
+              type="text"
+              defaultValue={formData.studying}
+            ></input>
           </div>
           <div className="column is-3">
             <label>Start Month</label>
@@ -120,44 +138,72 @@ const FormPage = () => {
             ></input>
           </div>
         </div>
-        <hr style={{backgroundColor: '#454545', borderBottomWidth: 10}}></hr>
+        <hr style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}></hr>
         {jobIds.map((jobId) => {
           return (
             <div key={jobId} id={jobId}>
               <div className="columns is-multiline is-vcentered has-text-centered">
                 <div className="column is-3" style={{ margin: 10 }}>
                   <label>Title</label>
-                  <input id={`jobTitle${jobId}`} type="text" defaultValue={jobId.position}></input>
+                  <input
+                    id={`jobTitle${jobId}`}
+                    type="text"
+                    defaultValue={jobId.position}
+                  ></input>
                 </div>
                 <div className="column is-3">
                   <label>Company</label>
-                  <input id={`jobCompany${jobId}`} type="text" defaultValue={jobId.company}></input>
+                  <input
+                    id={`jobCompany${jobId}`}
+                    type="text"
+                    defaultValue={jobId.company}
+                  ></input>
                 </div>
                 <div className="column is-3">
                   <label>Location</label>
-                  <input id={`jobLocation${jobId}`} type="text" defaultValue={jobId.location}></input>
+                  <input
+                    id={`jobLocation${jobId}`}
+                    type="text"
+                    defaultValue={jobId.location}
+                  ></input>
                 </div>
                 <div className="column is-3">
                   <label>Start Month</label>
-                  <input id={`jobStartMonth${jobId}`} type="text" defaultValue={jobId.start_month}></input>
+                  <input
+                    id={`jobStartMonth${jobId}`}
+                    type="text"
+                    defaultValue={jobId.start_month}
+                  ></input>
                 </div>
-                <div className="column is-4" style={{margin: 5}}>
+                <div className="column is-4" style={{ margin: 5 }}>
                   <label>Start Year</label>
-                  <input id={`jobStartYear${jobId}`} type="text" defaultValue={jobId.start_year}></input>
+                  <input
+                    id={`jobStartYear${jobId}`}
+                    type="text"
+                    defaultValue={jobId.start_year}
+                  ></input>
                 </div>
                 <div className="column is-4">
                   <p>End Month</p>
-                  <input id={`jobEndMonth${jobId}`} type="text" defaultValue={jobId.end_month}></input>
+                  <input
+                    id={`jobEndMonth${jobId}`}
+                    type="text"
+                    defaultValue={jobId.end_month}
+                  ></input>
                 </div>
-                <div className="column is-4"> 
+                <div className="column is-4">
                   <p>End Year</p>
-                  <input id={`jobEndYear${jobId}`} type="text" defaultValue={jobId.end_year}></input>
+                  <input
+                    id={`jobEndYear${jobId}`}
+                    type="text"
+                    defaultValue={jobId.end_year}
+                  ></input>
                 </div>
               </div>
             </div>
           );
         })}
-        <hr style={{backgroundColor: '#454545', borderBottomWidth: 10}}></hr>
+        <hr style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}></hr>
         <div className="columns is-centered">
           <button
             className="column is-12 mt-2"
@@ -197,8 +243,8 @@ const FormPage = () => {
           >
             Add Skill
           </button>
-          <Link to="/menu">
-            <button type="submit">Submit</button>
+          <Link to="/menu" className="column is-full">
+            <button type="submit" className="button is-fullwidth">Submit</button>
           </Link>
         </div>
       </form>
