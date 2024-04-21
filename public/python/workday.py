@@ -15,7 +15,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 driver = webdriver.Firefox()
-wait = WebDriverWait(driver, 10)
+wait = WebDriverWait(driver, 50)
 
 BUFFER_TIME = 0.5
 
