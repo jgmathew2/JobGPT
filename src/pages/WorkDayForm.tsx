@@ -45,22 +45,25 @@ const WorkDayForm: React.FC = () => {
 
   return (
     <div>
-        <div style={{position: 'absolute', top: 10, right: 10}}>
-          <button className="button is-light" onClick={() => navigate(-1)}>
-            Back
-          </button>
-        </div>
-    <div className="columns is-multiline">
-      <div className="column is-full has-text-centered">
+      <div style={{ position: "absolute", top: 10, right: 10 }}>
+        <button className="button is-light" onClick={() => navigate(-1)}>
+          BACK
+        </button>
+      </div>
+      <div
+        className="form-header has-text-centered"
+        style={{ position: "absolute", top: 10, left: 280 }}
+      >
         <header>
-          <h1>JOB-GPT</h1>
+          <h1>Job-GPT</h1>
         </header>
       </div>
       <form onSubmit={handleSubmit}>
-        <div style={{ margin: 15 }}>
+        <div className="columns is-multiline" style={{ marginLeft: 10 }}>
           <div className="column is-full">
             <label>Preferred Login Email:</label>
             <input
+              style={{ marginLeft: 5 }}
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -70,6 +73,7 @@ const WorkDayForm: React.FC = () => {
           <div className="column is-full">
             <label>Preferred Login Password:</label>
             <input
+              style={{ marginLeft: 5 }}
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -79,6 +83,7 @@ const WorkDayForm: React.FC = () => {
           <div className="column is-full">
             <label>Role:</label>
             <input
+              style={{ marginLeft: 5 }}
               type="text"
               value={role}
               onChange={(e) => setRole(e.target.value)}
@@ -88,6 +93,7 @@ const WorkDayForm: React.FC = () => {
           <div className="column is-full">
             <label>Location:</label>
             <input
+              style={{ marginLeft: 5 }}
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
@@ -97,6 +103,7 @@ const WorkDayForm: React.FC = () => {
           <div className="column is-full">
             <label>Season:</label>
             <select
+              style={{ marginLeft: 5 }}
               value={season}
               onChange={(e) => setSeason(e.target.value)}
               required
@@ -107,18 +114,18 @@ const WorkDayForm: React.FC = () => {
             </select>
           </div>
         </div>
-        <div className="column is-5" style={{margin: 12}}>
-          <button className="button is-dark is-rounded" type="submit">
-            Submit
-          </button>
-        </div>
+
+        <button
+          className="column is-6 button is-dark is-rounded"
+          style={{ margin: 17 }}
+          type="submit"
+        >
+          SUBMIT
+        </button>
       </form>
       <div className="columns" style={{ margin: 5 }}>
-        <div className="column">
-          {message && <p>{message}</p>}
-        </div>
+        <div className="column">{message && <p>{message}</p>}</div>
       </div>
-    </div>
     </div>
   );
 };
