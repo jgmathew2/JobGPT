@@ -32,6 +32,12 @@ const LandingPage: React.FC = () => {
         console.error("Error in IPC call:", error);
         alert("Error in saving file: " + error);
       }
+      try {
+        const response = await window.ipcRenderer.invoke("upload_resume", {});
+      } catch (error) {
+        console.error("Error in resume upload:", error);
+        alert("Error in resume to chatgpt: " + error);
+      }
     } else {
       console.log("No file selected.");
       alert("No file selected.");
