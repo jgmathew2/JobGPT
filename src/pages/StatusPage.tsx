@@ -25,7 +25,15 @@ const StatusPage = (props: StatusPageProps) => {
     }
   };
 
-  const handleStop = () => {};
+  const handleStop = () => {
+
+    if(isLinkedIn) {
+      window.ipcRenderer.invoke("stop_process", {buffer: "linkedin.py"})
+
+    } else {
+      window.ipcRenderer.invoke("stop_process", {buffer: "workday.py"})
+    }
+  }
 
   const handleBack = () => {
     handleStop();

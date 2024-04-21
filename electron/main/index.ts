@@ -200,6 +200,11 @@ ipcMain.handle("workdayscrape", async (event, args) => {
   });
 });
 
+ipcMain.handle("stop_process", async (event, { buffer }) => {
+
+    var process = spawn("pkill", ["-9", "-f", buffer]);
+});
+
 let win: BrowserWindow | null = null;
 const preload = path.join(__dirname, "../preload/index.mjs");
 const indexHtml = path.join(RENDERER_DIST, "index.html");

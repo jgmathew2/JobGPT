@@ -31,8 +31,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   startWorkday: () => ipcRenderer.invoke("run_workday", {}), 
 
+  stopProcess: () => ipcRenderer.invoke("", {}),
 
-  runPythonScript: (args) => ipcRenderer.invoke('workdayscrape', args),
+  runPythonScript: (buffer) => ipcRenderer.invoke('stop_process', buffer),
 
   // You can expose other APTs you need here.
   // ...

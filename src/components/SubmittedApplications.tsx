@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 
 const SubmittedApplications = () => {
-  const [companyList, setCompanyList] = useState([
-    'Google STEP',
-    'Meta University',
-  ]);
+  const [companyList, setCompanyList] = useState([""]);
 
   const [applicationCount, setApplicationCount] = useState(2);
 
