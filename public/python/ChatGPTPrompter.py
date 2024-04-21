@@ -21,9 +21,6 @@ pre_prompts = ["I am a US-born citizen who does not require any sponsorships. Ho
 
 # Figure out how to do pathname with python integration
 async def upload_resume():
-
-    print("Hello")
-
     pathname = str(pathlib.Path(__file__).parent.resolve())
 
 
