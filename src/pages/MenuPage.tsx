@@ -9,13 +9,13 @@ const MenuPage: React.FC = () => {
     <div>
       <div style={{position: 'absolute', top: 10, right: 10}}>
           <button className="button is-light" onClick={() => navigate(-1)}>
-            Back
+            BACK
           </button>
         </div>
       <div className="columns is-multiline">
         <div className="column has-text-centered">
           <header>
-            <h1>JOB-GPT</h1>
+            <h1>Job-GPT</h1>
             <p className="mt-16">Choose Application Type:</p>
           </header>
         </div>

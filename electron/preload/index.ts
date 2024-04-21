@@ -23,7 +23,10 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   uploadResume: () => ipcRenderer.invoke('upload_resume', {} ),
 
-  getFormData: () => ipcRenderer.invoke("form_data_from_json", {})
+  getFormData: () => ipcRenderer.invoke("form_data_from_json", {}), 
+
+  getPrevApps: () => ipcRenderer.invoke("get_previous_applications", {})
+
   // You can expose other APTs you need here.
   // ...
 })

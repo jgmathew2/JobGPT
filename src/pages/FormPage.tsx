@@ -53,12 +53,12 @@ const FormPage = () => {
         <div className="column is-2"></div>
         <div className="column has-text-centered is-8">
           <header>
-            <h1>JOB-GPT</h1>
+            <h1>Job-GPT</h1>
           </header>
         </div>
         <div className="column has-text-right is-2" style={{ marginTop: 12 }}>
           <button className="button is-light" onClick={() => navigate(-1)}>
-            Back
+            BACK
           </button>
         </div>
       </div>
@@ -173,7 +173,7 @@ const FormPage = () => {
             <input
               id="eduStartMonth"
               type="text"
-              value={formData.school_start_month}
+              defaultValue={formData.school_start_month}
               onChange={(e) => {
                 formData.school_start_month = e.target.value;
               }}
@@ -184,7 +184,7 @@ const FormPage = () => {
             <input
               id="eduStartYear"
               type="text"
-              value={formData.school_start_year}
+              defaultValue={formData.school_start_year}
               onChange={(e) => {
                 formData.school_start_year = e.target.value;
               }}
@@ -195,7 +195,7 @@ const FormPage = () => {
             <input
               id="eduEndMonth"
               type="text"
-              value={formData.school_end_month}
+              defaultValue={formData.school_end_month}
               onChange={(e) => {
                 formData.school_end_month = e.target.value;
               }}
@@ -206,7 +206,7 @@ const FormPage = () => {
             <input
               id="eduEndYear"
               type="text"
-              value={formData.school_end_year}
+              defaultValue={formData.school_end_year}
               onChange={(e) => {
                 formData.school_end_year = e.target.value;
               }}
@@ -328,7 +328,7 @@ const FormPage = () => {
               onClick={updateFormData}
               className="button is-fullwidth"
             >
-              Submit
+              SUBMIT
             </button>
           </Link>
         </div>

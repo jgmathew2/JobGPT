@@ -32,6 +32,12 @@ const LandingPage: React.FC = () => {
         console.error("Error in IPC call:", error);
         alert("Error in saving file: " + error);
       }
+      try {
+        const response = await window.ipcRenderer.invoke("upload_resume", {});
+      } catch (error) {
+        console.error("Error in resume upload:", error);
+        alert("Error in resume to chatgpt: " + error);
+      }
     } else {
       console.log("No file selected.");
       alert("No file selected.");
@@ -57,67 +63,63 @@ const LandingPage: React.FC = () => {
   };
 
   return (
-    <div className="landing-page-container">
-      <div style={{ position: "absolute", top: 10, right: 10 }}>
-        <Link to="/form">
-          <button
-            className="button is-light"
-          >
-            Skip
-          </button>
-        </Link>
-      </div>
-      <header className="header">
-        <h1>JOB-GPT</h1>
-        <p style={{ fontFamily: "Ligconsolata", margin: 40 }}>
-          Apply to dozens of jobs, instantly with the click of a button. Just
-          upload your resume and Job-GPT will take care of the rest!
-        </p>
-      </header>
-
-      <main className="upload-container">
-        <div className="columns is-vcentered">
-          <input
-            type="file"
-            id="resume-upload"
-            onChange={handleFileChange}
-            accept=".pdf"
-            hidden
-          />
-          <label
-            htmlFor="resume-upload"
-            className="column upload-button has-text-centered"
-            style={{ width: 100, height: 45 }}
-          >
-            UPLOAD
-          </label>
-          <button
-            onClick={handleUploadClick}
-            className="column upload-confirm-button"
-            style={{ width: 100, height: 45 }}
-          >
-            SUBMIT
-          </button>
+      <div className="landing-page-container" style={{backgroundImage: 'linear-gradient(to bottom, rgba(0,0,0,1), rgba(135,131,131,1))'}}>
+        <div style={{ position: "absolute", top: 10, right: 10 }}>
+          <Link to="/form">
+            <button className="button is-light">SKIP</button>
+          </Link>
         </div>
-        {resumeFile && (
-          <p className="file-info has-text-centered">
-            {resumeFile.name} uploaded
+        <header className="header">
+          <h1 style={{fontWeight: 'lighter'}}>Job-GPT</h1>
+          <p style={{ fontFamily: "Ligconsolata", margin: 40 }}>
+            Apply to dozens of jobs, instantly with the click of a button. Just
+            upload your resume and Job-GPT will take care of the rest!
           </p>
-        )}
-        <div className="columns is-vcentered is-centered mt-4">
-          {uploadSuccess && (
-            <Link to="/form">
-              <button
-                className="column upload-confirm-button"
-                style={{ width: 100, height: 45 }}
-              >
-                NEXT
-              </button>
-            </Link>
+        </header>
+
+        <main className="upload-container">
+          <div className="columns is-vcentered">
+            <input
+              type="file"
+              id="resume-upload"
+              onChange={handleFileChange}
+              accept=".pdf"
+              hidden
+            />
+            <label
+              htmlFor="resume-upload"
+              className="column upload-button has-text-centered"
+              style={{ width: 100, height: 45 }}
+            >
+              UPLOAD
+            </label>
+            <button
+              onClick={handleUploadClick}
+              className="column upload-confirm-button"
+              style={{ width: 100, height: 45 }}
+            >
+              SUBMIT
+            </button>
+          </div>
+          {resumeFile && (
+            <p className="file-info has-text-centered">
+              {resumeFile.name} uploaded
+            </p>
           )}
-        </div>
-      </main>
-    </div>
+          <div className="columns is-vcentered is-centered mt-4">
+            {uploadSuccess && (
+              <Link to="/form">
+                <button
+                  className="column upload-confirm-button"
+                  style={{ width: 100, height: 45 }}
+                >
+                  NEXT
+                </button>
+              </Link>
+            )}
+          </div>
+        </main>
+      </div>
   );
 };
 

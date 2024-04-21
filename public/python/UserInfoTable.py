@@ -7,7 +7,6 @@ user_data = {}
 
 async def load_user_info():
 
-    clear_convo()
     await upload_resume()
 
     async with asyncio.TaskGroup() as tg:
@@ -41,7 +40,7 @@ async def load_user_info():
     user_data["school"] = task10.result()
     user_data["school_start_year"] = task11.result()
     user_data["school_start_month"] = task12.result()
-    user_data["school end month?"] = task13.result()
+    user_data["school_end_month"] = task13.result()
     user_data["school_end_year"] = task14.result()
     user_data["skills"] = task15.result().split(",")
     user_data["linkedin"] = task16.result()
