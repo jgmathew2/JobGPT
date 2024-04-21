@@ -63,6 +63,12 @@ button:hover {
   border-radius: 5px;
 }
 
+.upload-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), /* White highlight */
+  0 0 20px rgba(0, 0, 0, 0.4); /* Darker shadow */
+}
+
 .file-info {
   margin-top: 10px;
 }
