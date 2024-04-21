@@ -10,7 +10,6 @@ const FormPage = () => {
   const [dataRead, setFormRead] = useState<boolean>(false);
   const navigate = useNavigate(); // Hook to access navigate function
 
-
   let updateFormData = async () => {
     try {
       // Send the JSON data with the filename
@@ -37,7 +36,7 @@ const FormPage = () => {
     for (const key of Object.keys(formData.job_data)) {
       let obj = formData.job_data[key];
 
-      obj.index = key
+      obj.index = key;
 
       jobs.push(obj);
     }
@@ -154,8 +153,14 @@ const FormPage = () => {
           </div>
           <div className="column is-3" style={{ margin: 10 }}>
             <label>BS/MS</label>
-            <input id="degree" type="text" defaultValue={ formData.degree ? formData.degree : ""}
-            onChange={(e) => {formData.degree = e.target.value}}></input>
+            <input
+              id="degree"
+              type="text"
+              defaultValue={formData.degree ? formData.degree : ""}
+              onChange={(e) => {
+                formData.degree = e.target.value;
+              }}
+            ></input>
           </div>
           <div className="column is-3">
             <label>Field of Study</label>
@@ -213,49 +218,90 @@ const FormPage = () => {
             ></input>
           </div>
         </div>
-        <hr style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}></hr>
+        
         {jobIds.map((jobId) => {
           return (
             <div key={jobId} id={jobId}>
+              <hr style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}></hr>
               <div className="columns is-multiline is-vcentered has-text-centered">
                 <div className="column is-3" style={{ margin: 10 }}>
                   <label>Title</label>
-                  <input id={`jobTitle${jobId}`} type="text" defaultValue={jobId.position}
+                  <input
+                    id={`jobTitle${jobId}`}
+                    type="text"
+                    defaultValue={jobId.position}
                     onChange={(e) => {
-                      formData.job_data[jobId.index].position = e.target.value
-                      }}>
-                        
-                      </input>
+                      formData.job_data[jobId.index].position = e.target.value;
+                    }}
+                  ></input>
                 </div>
                 <div className="column is-3">
                   <label>Company</label>
-                  <input id={`jobCompany${jobId}`} type="text" defaultValue={jobId.company}
-                    onChange={(e) => {formData.job_data[jobId.index].company = e.target.value}}></input>
+                  <input
+                    id={`jobCompany${jobId}`}
+                    type="text"
+                    defaultValue={jobId.company}
+                    onChange={(e) => {
+                      formData.job_data[jobId.index].company = e.target.value;
+                    }}
+                  ></input>
                 </div>
                 <div className="column is-3">
                   <label>Location</label>
-                  <input id={`jobLocation${jobId}`} type="text" defaultValue={jobId.location}
-                  onChange={(e) => {formData.job_data[jobId.index].location = e.target.value}}></input>
+                  <input
+                    id={`jobLocation${jobId}`}
+                    type="text"
+                    defaultValue={jobId.location}
+                    onChange={(e) => {
+                      formData.job_data[jobId.index].location = e.target.value;
+                    }}
+                  ></input>
                 </div>
                 <div className="column is-3">
                   <label>Start Month</label>
-                  <input id={`jobStartMonth${jobId}`} type="text" defaultValue={jobId.start_month}
-                    onChange={(e) => {formData.job_data[jobId.index].start_month = e.target.value}}></input>
+                  <input
+                    id={`jobStartMonth${jobId}`}
+                    type="text"
+                    defaultValue={jobId.start_month}
+                    onChange={(e) => {
+                      formData.job_data[jobId.index].start_month =
+                        e.target.value;
+                    }}
+                  ></input>
                 </div>
                 <div className="column is-4" style={{ margin: 5 }}>
                   <p>Start Year</p>
-                  <input id={`jobStartYear${jobId}`} type="text" defaultValue={jobId.start_year}
-                    onChange={(e) => {formData.job_data[jobId.index].start_year = e.target.value}}></input>
+                  <input
+                    id={`jobStartYear${jobId}`}
+                    type="text"
+                    defaultValue={jobId.start_year}
+                    onChange={(e) => {
+                      formData.job_data[jobId.index].start_year =
+                        e.target.value;
+                    }}
+                  ></input>
                 </div>
                 <div className="column is-4">
                   <p>End Month</p>
-                  <input id={`jobEndMonth${jobId}`} type="text" defaultValue={jobId.end_month}
-                    onChange={(e) => {formData.job_data[jobId.index].end_month = e.target.value}}></input>
+                  <input
+                    id={`jobEndMonth${jobId}`}
+                    type="text"
+                    defaultValue={jobId.end_month}
+                    onChange={(e) => {
+                      formData.job_data[jobId.index].end_month = e.target.value;
+                    }}
+                  ></input>
                 </div>
                 <div className="column is-4">
                   <p>End Year</p>
-                  <input id={`jobEndYear${jobId}`} type="text" defaultValue={jobId.end_year}
-                    onChange={(e) => {formData.job_data[jobId.index].end_year = e.target.value}}></input>
+                  <input
+                    id={`jobEndYear${jobId}`}
+                    type="text"
+                    defaultValue={jobId.end_year}
+                    onChange={(e) => {
+                      formData.job_data[jobId.index].end_year = e.target.value;
+                    }}
+                  ></input>
                 </div>
                 <div className="column is-2"></div>
                 <div className="column is-8">
@@ -266,20 +312,18 @@ const FormPage = () => {
                     id={`jobDescription${jobId}`}
                     defaultValue={jobId.description}
                     onChange={(e) => {
-                      formData.job_data[jobId.index].description = e.target.value
+                      formData.job_data[jobId.index].description =
+                        e.target.value;
                     }}
                   ></textarea>
                 </div>
               </div>
-              <hr
-                style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}
-              ></hr>
             </div>
           );
         })}
-        <div className="columns is-centered">
+        <div className="columns is-centered mt-4">
           <button
-            className="column is-12 mt-2"
+            className="column is-2 mt-2"
             onClick={() => {
               setJobIds((currentJobIds) => {
                 return [...currentJobIds, v4()];
@@ -289,44 +333,45 @@ const FormPage = () => {
             Add Job
           </button>
         </div>
+        <hr style={{ backgroundColor: "#454545", borderBottomWidth: 10 }}></hr>
         <div className="columns is-multiline is-vcentered has-text-centered">
           {skillIds.map((skillId) => {
-            
-            let skillIndex = skillIds.indexOf(skillId)
-            
+            let skillIndex = skillIds.indexOf(skillId);
+
             return (
               <>
                 <div className="column is-one-fourth">
-                  <label>Skill: </label>
+                  <p>Skill: </p>
                   <input
                     key={skillId}
                     id={skillId}
                     defaultValue={skillId}
                     type="text"
                     onChange={(e) => {
-                      formData.skills[skillIndex] = e.target.value
+                      formData.skills[skillIndex] = e.target.value;
                     }}
                   ></input>
                 </div>
               </>
             );
           })}
-
-          <button
-            className="column is-12"
-            onClick={() => {
-              setSkillIds((currentSkillIds) => {
-                return [...currentSkillIds, ""];
-              });
-            }}
-          >
-            Add Skill
-          </button>
-          <Link to="/menu" className="column is-full">
+            <div className="column is-12">
+              <button
+                onClick={() => {
+                  setSkillIds((currentSkillIds) => {
+                    return [...currentSkillIds, ""];
+                  });
+                }}
+              >
+                Add Skill
+              </button>
+          </div>
+          <Link to="/menu" className="column is-12 has-text-centered">
             <button
               type="submit"
               onClick={updateFormData}
-              className="button is-fullwidth"
+              className="button is-rounded"
+              style={{width: 250}}
             >
               SUBMIT
             </button>

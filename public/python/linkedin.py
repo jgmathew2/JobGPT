@@ -72,6 +72,10 @@ try:
             driver.execute_script("arguments[0].scrollIntoView(true)", job)
             time.sleep(0.1)
 
+            if "Applied" in job.text.split("\n")[-1]:
+                job.find_element(By.CSS_SELECTOR, "[aria-label^=\"Dismiss\"]").click()
+                continue
+
             try:
                 job_link = job.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
             except:
@@ -99,63 +103,116 @@ try:
                 driver.close()
                 driver.switch_to.window(link_window_handle)
             else:
+                early_leave = False
                 try:
-                    while True:
-                        for question in driver.find_elements(By.CSS_SELECTOR,
-                                                             ".jobs-easy-apply-form-section__grouping"):
-                            try:
-                                question.find_element(By.CSS_SELECTOR, "[class*=\"required\"]")
-                            except:
-                                continue
+                    follow_checkbox = driver.find_element(By.ID, "follow-company-checkbox")
+                    if follow_checkbox.get_attribute("checked") == "true":
+                        driver.execute_script("arguments[0].click()", follow_checkbox)
 
-                            question_label = question.find_element(By.CSS_SELECTOR, "label")
-                            targeted = driver.find_element(By.ID, question_label.get_attribute("for"))
-                            if (targeted.tag_name == "input" and targeted.get_attribute("value") != "") or (
-                                    targeted.tag_name == "select" and targeted.get_attribute("value") != ""):
-                                continue
-
-                            prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, write N/A. Speak from my perspective, rather than from yours. The question is: {question_label.text}"
-
-                            while True:
-                                try:
-                                    response = asyncio.run(ChatGPTPrompter.get_response(prompt))
-                                    targeted.clear()
-                                    time.sleep(0.5)
-                                    targeted.send_keys(response)
-                                    time.sleep(1)
-
-                                    error_message = question.find_element(By.CSS_SELECTOR,
-                                                                          ".artdeco-inline-feedback__message")
-                                    prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, write N/A. Speak from my perspective, rather than from yours. MAKE SURE to follow the following constraint: {error_message.text}. Your response must follow that constraint exactly. The question is: {question_label.text}"
-                                except:
-                                    break
-
-                        try:
-                            file_selector = driver.find_element(By.CSS_SELECTOR,
-                                                                "input[id^=jobs-document-upload-file-input-upload-resume]")
-                            file_selector.send_keys(os.path.abspath("public/uploads/resume.pdf"))
-                        except:
-                            pass
-
-                        try:
-                            driver.find_element(By.CSS_SELECTOR, "[aria-label=\"Review your application\"]").click()
-                            try:
-                                follow_checkbox = driver.find_element(By.ID, "follow-company-checkbox")
-                                if follow_checkbox.get_attribute("checked") == "true":
-                                    driver.execute_script("arguments[0].click()", follow_checkbox)
-                            except:
-                                pass
-
-                            driver.find_element(By.CSS_SELECTOR, "[aria-label=\"Submit application\"]").click()
-                            break
-                        except:
-                            pass
-
-                        driver.find_element(By.CSS_SELECTOR, "[data-easy-apply-next-button]").click()
-                        time.sleep(1)
+                    driver.find_element(By.CSS_SELECTOR, "[aria-label=\"Submit application\"]").click()
+                    early_leave = True
                 except:
                     pass
 
+                if not early_leave:
+                    try:
+                        while True:
+                            for question in driver.find_elements(By.CSS_SELECTOR,
+                                                                 ".jobs-easy-apply-form-section__grouping"):
+                                try:
+                                    question.find_element(By.CSS_SELECTOR, "[class*=\"required\"]")
+                                except:
+                                    continue
+
+                                try:
+                                    fieldset_target = question.find_element(By.CSS_SELECTOR, "fieldset")
+                                    try:
+                                        question_label = fieldset_target.find_element(By.CSS_SELECTOR, "legend")
+                                        answer_labels = fieldset_target.find_elements(By.CSS_SELECTOR, "label")
+
+                                        answer_to_label = {}
+                                        for label in answer_labels:
+                                            answer_to_label[label.text] = label
+
+                                        opts_prompt = ", ".join(map(lambda opt: f"\"{opt}\"", answer_to_label.keys()))
+                                        prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, choose an answer that makes sense for an average person. You have a limited number of choices, and you MUST select one of these choices. The choices are: {opts_prompt}. Use one of these choices exactly. You MUST respond with one of these options. The question is: {question_label.text}"
+                                        while True:
+                                            response = asyncio.run(ChatGPTPrompter.get_response(prompt))
+                                            if response in answer_to_label.keys():
+                                                break
+
+                                        chosen_label = answer_to_label[response]
+                                        chosen_input = driver.find_element(By.ID, chosen_label.get_attribute("for"))
+                                        driver.execute_script("arguments[0].click()", chosen_input)
+                                    except:
+                                        pass
+                                    continue
+                                except:
+                                    pass
+
+                                question_label = question.find_element(By.CSS_SELECTOR, "label")
+                                targeted = driver.find_element(By.ID, question_label.get_attribute("for"))
+                                if (targeted.tag_name == "input" and targeted.get_attribute("value") != "") or (
+                                        targeted.tag_name == "select" and targeted.get_attribute("value") != "Select an option"):
+                                    continue
+
+                                if targeted.tag_name == "input":
+                                    prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, write N/A. Speak from my perspective, rather than from yours. The question is: {question_label.text}"
+
+                                    while True:
+                                        try:
+                                            response = asyncio.run(ChatGPTPrompter.get_response(prompt))
+                                            targeted.clear()
+                                            time.sleep(0.5)
+                                            targeted.send_keys(response)
+                                            time.sleep(1)
+
+                                            error_message = question.find_element(By.CSS_SELECTOR,
+                                                                                  ".artdeco-inline-feedback__message")
+                                            prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, write N/A. Speak from my perspective, rather than from yours. MAKE SURE to follow the following constraint: {error_message.text}. Your response must follow that constraint exactly. The question is: {question_label.text}"
+                                        except:
+                                            break
+                                elif targeted.tag_name == "select":
+                                    children = targeted.find_elements(By.XPATH, "./*")
+                                    if len(children) > 0:
+                                        opts = list(map(lambda e: e.text, children[1:]))
+                                        opts_prompt = ", ".join(map(lambda opt: f"\"{opt}\"", opts))
+
+                                        prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, choose an answer that makes sense for an average person. You have a limited number of choices, and you MUST select one of these choices. The choices are: {opts_prompt}. Use one of these choices exactly. You MUST respond with one of these options. The question is: {question}"
+                                        while True:
+                                            response = asyncio.run(ChatGPTPrompter.get_response(prompt))
+                                            if response in opts:
+                                                break
+
+                                        targeted.send_keys(response)
+
+                            try:
+                                file_selector = driver.find_element(By.CSS_SELECTOR,
+                                                                    "input[id^=jobs-document-upload-file-input-upload-resume]")
+                                file_selector.send_keys(os.path.abspath("public/uploads/resume.pdf"))
+                            except:
+                                pass
+
+                            try:
+                                driver.find_element(By.CSS_SELECTOR, "[aria-label=\"Review your application\"]").click()
+                                try:
+                                    follow_checkbox = driver.find_element(By.ID, "follow-company-checkbox")
+                                    if follow_checkbox.get_attribute("checked") == "true":
+                                        driver.execute_script("arguments[0].click()", follow_checkbox)
+                                except:
+                                    pass
+
+                                driver.find_element(By.CSS_SELECTOR, "[aria-label=\"Submit application\"]").click()
+                                break
+                            except:
+                                pass
+
+                            driver.find_element(By.CSS_SELECTOR, "[data-easy-apply-next-button]").click()
+                            time.sleep(1)
+                    except:
+                        pass
+
+            time.sleep(3)
             driver.close()
 
             page_start += 25
