@@ -1,4 +1,4 @@
 openai
 selenium
 pypdf
-requeests
+requests

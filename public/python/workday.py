@@ -13,7 +13,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
 driver = webdriver.Firefox()
-wait = WebDriverWait(driver, 1000)
+wait = WebDriverWait(driver, 10)
 
 BUFFER_TIME = 0.5
 
@@ -505,18 +505,24 @@ with open("user_info_table.json") as user_file:
 with open("public/uploads/WorkDayForm.json") as exec_file:
     exec_data = json.load(exec_file)
 
+with open("public/filtered_links.txt") as links_file:
+    links = [line.rstrip() for line in links_file.readlines()]
+
 try:
-    driver.get(
-        "https://salesforce.wd12.myworkdayjobs.com/en-US/Slack/login?redirect=%2Fen-US%2FSlack%2Fjob%2FTexas---Remote%2FStaff-Software-Engineer--SRE----Slack_JR246676%2Fapply%2FapplyManually")
+    for link in links:
+        try:
+            driver.get(link)
 
-    do_signup(user_data, exec_data)
-    time.sleep(10 * BUFFER_TIME)
-    do_my_info(user_data, exec_data)
-    do_experience(user_data, exec_data)
-    do_questions(user_data, exec_data)
-    do_voluntary(user_data, exec_data)
-    do_self_identify(user_data, exec_data)
+            do_signup(user_data, exec_data)
+            time.sleep(10 * BUFFER_TIME)
+            do_my_info(user_data, exec_data)
+            do_experience(user_data, exec_data)
+            do_questions(user_data, exec_data)
+            do_voluntary(user_data, exec_data)
+            do_self_identify(user_data, exec_data)
 
-    time.sleep(10_000)
+            time.sleep(5)
+        except:
+            pass
 finally:
     driver.quit()

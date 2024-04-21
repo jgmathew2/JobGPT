@@ -2,7 +2,7 @@ import json
 import requests
 
 # Load the local JSON file with the criteria
-with open('../uploads/WorkDayForm.json', 'r') as file:
+with open('public/uploads/WorkDayForm.json', 'r') as file:
     criteria = json.load(file)
 
 # URL of the JSON file containing listings
@@ -42,7 +42,7 @@ for job in jobs:
                         filtered_links.append(job['url'])
 
 # Write the links to a file in a specific directory
-output_directory = '../uploads/'
+output_directory = 'public/uploads/'
 output_file_path = output_directory + 'filtered_links.txt'
 
 with open(output_file_path, 'w') as output_file:
