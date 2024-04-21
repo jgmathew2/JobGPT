@@ -1,6 +1,8 @@
 import asyncio
 import json
 import os
+import re
+import urllib.parse
 from datetime import datetime
 import time
 import ChatGPTPrompter
@@ -508,10 +510,28 @@ with open("public/uploads/WorkDayForm.json") as exec_file:
 with open("public/uploads/filtered_links.txt") as links_file:
     links = [line.rstrip() for line in links_file.readlines()]
 
+with open("public/uploads/link_db.txt") as link_db:
+    used_links = [line.rstrip() for line in link_db.readlines()]
+
+link_db = open("public/uploads/link_db.txt", "a")
+
 try:
     for link in links:
+        if link in used_links:
+            continue
+
         try:
             driver.get(link)
+            position_name = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"jobPostingHeader\"]"))).text
+            position_company = "Unknown"
+            try:
+                current_url = urllib.parse.urlparse(driver.current_url)
+                match_result = re.search(r"(.*)\.wd(.*)\.myworkdayjobs\.com", current_url.hostname)
+                if match_result:
+                    position_company = match_result.group(1)
+            except:
+                pass
+
             wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-uxi-element-id^=\"Apply_adventureButton\"]"))).click()
             wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"applyManually\"]"))).click()
 
@@ -523,6 +543,16 @@ try:
             do_voluntary(user_data, exec_data)
             do_self_identify(user_data, exec_data)
 
+            used_links.append(link)
+
+            try:
+                link_db.write(link)
+                link_db.write("\n")
+                link_db.flush()
+            except:
+                pass
+
+            print(json.dumps([position_name, position_company]))
             time.sleep(5)
         except:
             pass

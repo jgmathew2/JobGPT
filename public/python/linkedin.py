@@ -72,9 +72,13 @@ try:
             driver.execute_script("arguments[0].scrollIntoView(true)", job)
             time.sleep(0.1)
 
-            if "Applied" in job.text.split("\n")[-1]:
+            split_by_newline = job.text.split("\n")
+
+            if "Applied" in split_by_newline[-1]:
                 job.find_element(By.CSS_SELECTOR, "[aria-label^=\"Dismiss\"]").click()
                 continue
+
+            stdout_info = [split_by_newline[0], split_by_newline[1]]
 
             try:
                 job_link = job.find_element(By.CSS_SELECTOR, "a").get_attribute("href")
@@ -110,6 +114,7 @@ try:
                         driver.execute_script("arguments[0].click()", follow_checkbox)
 
                     driver.find_element(By.CSS_SELECTOR, "[aria-label=\"Submit application\"]").click()
+                    print(json.dumps(stdout_info))
                     early_leave = True
                 except:
                     pass
@@ -203,6 +208,7 @@ try:
                                     pass
 
                                 driver.find_element(By.CSS_SELECTOR, "[aria-label=\"Submit application\"]").click()
+                                print(json.dumps(stdout_info))
                                 break
                             except:
                                 pass
