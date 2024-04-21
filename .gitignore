@@ -38,3 +38,4 @@ user_info_table.json
 current_gpt_convo.txt
 venv/
 public/python/__pycache__/
+*.pyc

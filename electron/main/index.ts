@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url'
 import path from 'node:path'
 import os from 'node:os'
 import { update } from './update'
-import {spawn} from 'node:child_process'
+import { spawn, exec } from 'node:child_process'
 
 globalThis.__filename = fileURLToPath(import.meta.url)
 globalThis.__dirname = path.dirname(__filename)
@@ -117,6 +117,23 @@ ipcMain.handle('get_previous_applications', async (event, { buffer }) => {
   }
 });
 
+// Setup IPC to run Python script
+ipcMain.handle('run-python-script', async (event, args) => {
+  // Specify the path to your Python script and include args if necessary
+  const scriptPath = '../../public/WorkDayScrape.py'; // Change this to your actual script path
+  const command = `python ${scriptPath} ${args}`;
+
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) {
+        console.error(`exec error: ${error}`);
+        return reject(stderr);
+      }
+      console.log(`stdout: ${stdout}`);
+      resolve(stdout);
+    });
+  });
+});
 
 let win: BrowserWindow | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
