@@ -27,7 +27,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   getPrevApps: () => ipcRenderer.invoke("get_previous_applications", {}),
 
-  runPythonScript: (args) => ipcRenderer.invoke('run-python-script', args),
+  runPythonScript: (args) => ipcRenderer.invoke('workdayscrape', args),
 
   // You can expose other APTs you need here.
   // ...

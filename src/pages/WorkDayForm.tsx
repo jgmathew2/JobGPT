@@ -28,7 +28,7 @@ const WorkDayForm: React.FC = () => {
       });
       if (response.success) {
         // Run Python script after successful data saving
-        const pythonResponse = await window.ipcRenderer.invoke('run-python-script', 'arguments_if_any');
+        const pythonResponse = await window.ipcRenderer.invoke('workdayscrape', 'arguments_if_any');
         console.log(pythonResponse); // Log or handle output from your Python script
         setMessage("Data saved successfully! Python script executed.");
         navigate("/status");

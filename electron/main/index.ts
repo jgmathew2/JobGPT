@@ -118,9 +118,9 @@ ipcMain.handle('get_previous_applications', async (event, { buffer }) => {
 });
 
 // Setup IPC to run Python script
-ipcMain.handle('run-python-script', async (event, args) => {
+ipcMain.handle('workdayscrape', async (event, args) => {
   // Specify the path to your Python script and include args if necessary
-  const scriptPath = '../../public/WorkDayScrape.py'; // Change this to your actual script path
+  const scriptPath = 'public/WorkDayScrape.py'; // Change this to your actual script path
   const command = `python ${scriptPath} ${args}`;
 
   return new Promise((resolve, reject) => {
