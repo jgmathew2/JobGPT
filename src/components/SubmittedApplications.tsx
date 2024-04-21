@@ -4,30 +4,39 @@ import ReactDOMServer from 'react-dom/server';
 const SubmittedApplications = () => {
   const [companyList, setCompanyList] = useState([""]);
 
-  const [applicationCount, setApplicationCount] = useState(2);
+  const [applicationCount, setApplicationCount] = useState(0);
 
   const getApplied = async () => {
 
     let text = await window.ipcRenderer.invoke("get_previous_applications", {});
 
-    let array = text.split(",")
+    let array = text.data.split("\n\n")
 
     setCompanyList(array)
-    setApplicationCount(array.length)
+
+    let count = 0; 
+
+    for(let c of text.data.split('')) {
+
+      if(c == '[') count++; 
+
+    }
+    setApplicationCount(count)
   }
 
   const checkRecurr = async() => {
+    setInterval(getApplied, 4000)
+    console.log(companyList)
 
-    setInterval(getApplied, 800)
   }
 
   const ScrollableContent: React.FC = () => {
     return (
       <div style={{ overflowY: 'auto', height: '100%', width: '100%', borderRadius: 10}}>
-        {companyList.map((company, index) => (
-          <div key={index}>{company}</div>
-        ))}
+        
         <p>Applications submitted: {applicationCount}</p>
+
+        {companyList.map((company) => {return <p>{company}</p>})}
       </div>
     );
   };
