@@ -29,7 +29,7 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   startLinkedIn: () => ipcRenderer.invoke("run_linkedin", {}), 
 
-  runPythonScript: (args) => ipcRenderer.invoke('run-python-script', args),
+  runPythonScript: (args) => ipcRenderer.invoke('workdayscrape', args),
 
   // You can expose other APTs you need here.
   // ...
