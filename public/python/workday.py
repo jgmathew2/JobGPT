@@ -505,13 +505,15 @@ with open("user_info_table.json") as user_file:
 with open("public/uploads/WorkDayForm.json") as exec_file:
     exec_data = json.load(exec_file)
 
-with open("public/filtered_links.txt") as links_file:
+with open("public/uploads/filtered_links.txt") as links_file:
     links = [line.rstrip() for line in links_file.readlines()]
 
 try:
     for link in links:
         try:
             driver.get(link)
+            wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-uxi-element-id^=\"Apply_adventureButton\"]"))).click()
+            wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"applyManually\"]"))).click()
 
             do_signup(user_data, exec_data)
             time.sleep(10 * BUFFER_TIME)
