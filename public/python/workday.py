@@ -1,4 +1,6 @@
 import asyncio
+import json
+import os
 from datetime import datetime
 import random
 import string
@@ -64,7 +66,6 @@ def do_signup():
         "abdalrahmanumayyad@gmail.com")
 
     password = generate_random_string(8)
-    print(password)
 
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"password\"]"))).send_keys(
         password)
@@ -76,11 +77,11 @@ def do_signup():
     wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]"))).click()
 
 
-def do_signin():
+def do_signin(user_data, exec_data):
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"email\"]"))).send_keys(
-        "abdalrahmanumayyad@gmail.com")
+        exec_data["email"])
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"password\"]"))).send_keys(
-        "VzxwuY7$")
+        exec_data["password"])
     sign_in = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]")))
     for _ in range(10):
         try:
@@ -93,7 +94,7 @@ def do_signin():
     time.sleep(10 * BUFFER_TIME)
 
 
-def do_my_info():
+def do_my_info(user_data, exec_data):
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"contactInformationPage\"]")))
 
     try:
@@ -126,7 +127,7 @@ def do_my_info():
     time.sleep(BUFFER_TIME)
     first_name = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"legalNameSection_firstName\"]")))
-    first_name.send_keys("Abd al-Rahman")
+    first_name.send_keys(user_data["first_name"])
     time.sleep(BUFFER_TIME)
     last_name = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"legalNameSection_lastName\"]")))
@@ -134,7 +135,7 @@ def do_my_info():
     time.sleep(BUFFER_TIME)
     last_name = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"legalNameSection_lastName\"]")))
-    last_name.send_keys("Umayyad")
+    last_name.send_keys(user_data["last_name"])
     time.sleep(BUFFER_TIME)
 
     address_line1 = wait.until(EC.presence_of_element_located(
@@ -143,7 +144,7 @@ def do_my_info():
     time.sleep(BUFFER_TIME)
     address_line1 = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"addressSection_addressLine1\"]")))
-    address_line1.send_keys("8097 La Plata Drive")
+    address_line1.send_keys(user_data["address"])
     time.sleep(BUFFER_TIME)
     city = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"addressSection_city\"]")))
@@ -151,23 +152,24 @@ def do_my_info():
     time.sleep(BUFFER_TIME)
     city = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"addressSection_city\"]")))
-    city.send_keys("College Park")
+    city.send_keys(user_data["city"])
     time.sleep(BUFFER_TIME)
     try:
         county = driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"addressSection_regionSubdivision1\"]")
         county.clear()
         time.sleep(BUFFER_TIME)
         county = wait.until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"addressSection_regionSubdivision1\"]")))
+            EC.presence_of_element_located(
+                (By.CSS_SELECTOR, "[data-automation-id=\"addressSection_regionSubdivision1\"]")))
         county.send_keys("N/A")
         time.sleep(BUFFER_TIME)
     except:
         pass
     region = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"addressSection_countryRegion\"]")))
-    for c in "Maryland":
+    for c in user_data["state"]:
         region.send_keys(c)
-        time.sleep(min(BUFFER_TIME / len("Maryland"), 0.1))
+        time.sleep(min(BUFFER_TIME / len(user_data["state"]), 0.1))
     time.sleep(BUFFER_TIME)
     postal_code = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"addressSection_postalCode\"]")))
@@ -175,7 +177,7 @@ def do_my_info():
     time.sleep(BUFFER_TIME)
     postal_code = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"addressSection_postalCode\"]")))
-    postal_code.send_keys("20742")
+    postal_code.send_keys(user_data["zipcode"])
     time.sleep(BUFFER_TIME)
 
     phone_number = wait.until(
@@ -184,11 +186,12 @@ def do_my_info():
     time.sleep(BUFFER_TIME)
     phone_number = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"phone-number\"]")))
-    phone_number.send_keys("(301) 405-1000")
+    phone_number.send_keys(user_data["phone_number"])
     time.sleep(BUFFER_TIME)
 
     try:
-        driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"formField-phone-device-type\"] button").send_keys("mobile")
+        driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"formField-phone-device-type\"] button").send_keys(
+            "mobile")
         time.sleep(BUFFER_TIME)
     except:
         pass
@@ -198,7 +201,7 @@ def do_my_info():
         (By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
 
 
-def do_experience():
+def do_experience(user_data, exec_data):
     # Wait until page visible
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"workExperienceSection\"]")))
 
@@ -208,7 +211,8 @@ def do_experience():
         time.sleep(BUFFER_TIME)
 
     # Work
-    for i in range(1, 2):
+    for i in range(1, len(user_data["job_data"] + 1)):
+        job_entry = user_data["job_data"][str(i - 1)]
         if i == 1:
             try:
                 driver.find_element(By.CSS_SELECTOR,
@@ -223,23 +227,25 @@ def do_experience():
 
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                    f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"jobTitle\"]"))).send_keys(
-            "Job Title")
+            job_entry["position"])
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                    f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"company\"]"))).send_keys(
-            "Company")
+            job_entry["company"])
         try:
-            driver.find_element(By.CSS_SELECTOR, f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"location\"]").send_keys("Location")
+            driver.find_element(By.CSS_SELECTOR,
+                                f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"location\"]").send_keys(
+                job_entry["location"])
         except:
             pass
 
         dates = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,
                                                                 f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"dateSectionMonth-input\"]")))
-        dates[0].send_keys("09/2022")
-        dates[1].send_keys("05/2023")
+        dates[0].send_keys(job_entry["start_month"] + "/" + job_entry["start_year"])
+        dates[0].send_keys(job_entry["end_month"] + "/" + job_entry["end_year"])
 
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                    f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"description\"]"))).send_keys(
-            "Description")
+            user_data["description"])
 
     # Education
     for i in range(1, 2):
@@ -259,13 +265,13 @@ def do_experience():
             # FRQ form type
             driver.find_element(By.CSS_SELECTOR,
                                 f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"school\"]").send_keys(
-                "University of Maryland - College Park")
+                user_data["school"])
         except:
             # MCQ form type
             try:
                 school_input = driver.find_element(By.CSS_SELECTOR,
                                                    f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"formField-schoolItem\"] input")
-                school_input.send_keys("University of Maryland - College Park")
+                school_input.send_keys(user_data["school"])
                 time.sleep(BUFFER_TIME)
                 school_input.send_keys(Keys.ENTER)
                 time.sleep(BUFFER_TIME)
@@ -277,17 +283,22 @@ def do_experience():
             "BS")
         field_of_study = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                                     f"[data-automation-id=\"education-{i}\"] [data-automation-id-prompt=\"field-of-study\"] input")))
-        field_of_study.send_keys("Computer Science")
+        field_of_study.send_keys(user_data["studying"])
         time.sleep(BUFFER_TIME)
         field_of_study.send_keys(Keys.ENTER)
         time.sleep(BUFFER_TIME)
         driver.switch_to.active_element.send_keys(Keys.ENTER)
         try:
-            driver.find_element(By.CSS_SELECTOR, f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"formField-startDate\"] input").send_keys("2023")
+            driver.find_element(By.CSS_SELECTOR,
+                                f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"formField-startDate\"] input").send_keys(
+                user_data["school_start_year"]
+            )
         except:
             pass
         try:
-            driver.find_element(By.CSS_SELECTOR, f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"formField-endDate\"] input").send_keys("2025")
+            driver.find_element(By.CSS_SELECTOR,
+                                f"[data-automation-id=\"education-{i}\"] [data-automation-id=\"formField-endDate\"] input").send_keys(
+                user_data["school_end_year"])
         except:
             pass
 
@@ -302,7 +313,7 @@ def do_experience():
 
     skills_input = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id-prompt=\"skillsPrompt\"] input")))
-    for skill in ["java", "python", "c++"]:
+    for skill in user_data["skills"]:
         skills_input.send_keys(skill)
         time.sleep(BUFFER_TIME)
         skills_input.send_keys(Keys.ENTER)
@@ -318,7 +329,7 @@ def do_experience():
     time.sleep(2 * BUFFER_TIME)
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"file-upload-input-ref\"]"))).send_keys(
-        "/home/tfz/Downloads/athlete.pdf")
+        os.path.abspath("public/uploads/resume.pdf"))
     time.sleep(4 * BUFFER_TIME)
 
     # LinkedIn
@@ -327,7 +338,7 @@ def do_experience():
         linked_in.clear()
         time.sleep(BUFFER_TIME)
         linked_in = driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"linkedinQuestion\"]")
-        linked_in.send_keys("https://www.linkedin.com/in/tahmid-zaman-216b51215/")
+        linked_in.send_keys(user_data["linkedin"])
     except:
         pass
 
@@ -347,7 +358,7 @@ def maybe_find(element, by, value) -> WebElement | None:
         return None
 
 
-def do_questions():
+def do_questions(user_data, exec_data):
     # some new questions might pop up as we answer
     seen_ids = []
     while True:
@@ -417,7 +428,7 @@ def do_questions():
         pass
 
 
-def do_voluntary():
+def do_voluntary(user_data, exec_data):
     buttons = wait.until(
         EC.presence_of_all_elements_located((By.CSS_SELECTOR, "[data-automation-id=\"usPersonalInfoSection\"] button")))
     for button in buttons:
@@ -455,7 +466,7 @@ def do_voluntary():
         EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
 
 
-def do_self_identify():
+def do_self_identify(user_data, exec_data):
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"name\"]"))).send_keys(
         "Abd al-Rahman")
     signature_date = wait.until(EC.presence_of_element_located(
@@ -474,16 +485,22 @@ def do_self_identify():
         EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
 
 
+with open("user_info_table.json") as user_file:
+    user_data = json.load(user_file)
+
+with open("public/uploads/WorkDayForm.json") as exec_file:
+    exec_data = json.load(exec_file)
+
 try:
     driver.get(
         "https://santander.wd3.myworkdayjobs.com/en-US/SantanderCareers/login?redirect=%2Fen-US%2FSantanderCareers%2Fjob%2FMiami%2FIntern-CSU-CAC_Req1300250-1%2Fapply%2FapplyManually")
 
-    do_signin()
-    do_my_info()
-    do_experience()
-    do_questions()
-    do_voluntary()
-    do_self_identify()
+    do_signin(user_data, exec_data)
+    do_my_info(user_data, exec_data)
+    do_experience(user_data, exec_data)
+    do_questions(user_data, exec_data)
+    do_voluntary(user_data, exec_data)
+    do_self_identify(user_data, exec_data)
 
     time.sleep(10_000)
 finally:

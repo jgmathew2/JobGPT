@@ -173,7 +173,7 @@ const FormPage = () => {
             <input
               id="eduStartMonth"
               type="text"
-              value={formData.school_start_month}
+              defaultValue={formData.school_start_month}
               onChange={(e) => {
                 formData.school_start_month = e.target.value;
               }}
@@ -184,7 +184,7 @@ const FormPage = () => {
             <input
               id="eduStartYear"
               type="text"
-              value={formData.school_start_year}
+              defaultValue={formData.school_start_year}
               onChange={(e) => {
                 formData.school_start_year = e.target.value;
               }}
@@ -195,7 +195,7 @@ const FormPage = () => {
             <input
               id="eduEndMonth"
               type="text"
-              value={formData.school_end_month}
+              defaultValue={formData.school_end_month}
               onChange={(e) => {
                 formData.school_end_month = e.target.value;
               }}
@@ -206,7 +206,7 @@ const FormPage = () => {
             <input
               id="eduEndYear"
               type="text"
-              value={formData.school_end_year}
+              defaultValue={formData.school_end_year}
               onChange={(e) => {
                 formData.school_end_year = e.target.value;
               }}
