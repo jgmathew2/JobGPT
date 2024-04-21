@@ -6,7 +6,23 @@ const SubmittedApplications: React.FC = () => {
     'Google STEP',
     'Meta University',
   ]);
+
   const [applicationCount, setApplicationCount] = useState(2);
+
+  const getApplied = async () => {
+
+    let text = await window.ipcRenderer.invoke("get_previous_applications", {});
+
+    let array = text.split(",")
+
+    setCompanyList(array)
+    setApplicationCount(array.length)
+  }
+
+  const checkRecurr = async() => {
+
+    setInterval(getApplied, 800)
+  }
 
   const ScrollableContent: React.FC = () => {
     return (

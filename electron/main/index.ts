@@ -103,6 +103,20 @@ ipcMain.handle('form_data_from_json', async (event, { buffer }) => {
   }
 });
 
+ipcMain.handle('get_previous_applications', async (event, { buffer }) => {
+  
+  try {
+    // Get the path from Tahmid once he makes it
+    const pathname = path.join(__dirname, "../../user_info_table.json");
+    const data = fs.readFileSync(pathname, 'utf8');
+
+    return { success: true, data};
+  } catch (err) {
+    console.error(`Failed to upload resume: ${err}`);
+    return { success: false, message: err.message };
+  }
+});
+
 
 let win: BrowserWindow | null = null
 const preload = path.join(__dirname, '../preload/index.mjs')
