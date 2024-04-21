@@ -27,7 +27,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   getPrevApps: () => ipcRenderer.invoke("get_previous_applications", {}), 
 
-  startLinkedIn: () => ipcRenderer.invoke("run_linkedin", {})
+  startLinkedIn: () => ipcRenderer.invoke("run_linkedin", {}), 
+
+  runPythonScript: (args) => ipcRenderer.invoke('run-python-script', args),
 
   // You can expose other APTs you need here.
   // ...

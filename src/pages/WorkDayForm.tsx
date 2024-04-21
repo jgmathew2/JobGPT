@@ -27,7 +27,10 @@ const WorkDayForm: React.FC = () => {
         contentType: "application/json",
       });
       if (response.success) {
-        setMessage("Data saved successfully!");
+        // Run Python script after successful data saving
+        const pythonResponse = await window.ipcRenderer.invoke('run-python-script', 'arguments_if_any');
+        console.log(pythonResponse); // Log or handle output from your Python script
+        setMessage("Data saved successfully! Python script executed.");
         navigate("/status");
       } else {
         setMessage(`Failed to save data: ${response.message}`);
@@ -37,10 +40,6 @@ const WorkDayForm: React.FC = () => {
     }
   };
 
-  const handleBack = () => {
-    navigate(-1); // Go back to the previous page
-  };
-
   return (
     <div>
       <div style={{ position: "absolute", top: 10, right: 10 }}>
@@ -48,10 +47,7 @@ const WorkDayForm: React.FC = () => {
           BACK
         </button>
       </div>
-      <div
-        className="form-header has-text-centered"
-        style={{ position: "absolute", top: 10, left: 280 }}
-      >
+      <div className="form-header has-text-centered" style={{ position: "absolute", top: 10, left: 280 }}>
         <header>
           <h1>Job-GPT</h1>
         </header>
@@ -95,12 +91,10 @@ const WorkDayForm: React.FC = () => {
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
-              placeholder="e.g., Chicago, IL"  // Adding placeholder text
               required
             />
           </div>
         </div>
-
         <button
           className="column is-6 button is-dark is-rounded"
           style={{ margin: 17 }}

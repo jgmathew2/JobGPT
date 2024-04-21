@@ -25,6 +25,22 @@ h1 {
 
 }
 
+input, textarea {
+  padding: 10px; /* Adjust padding as needed */
+  border: 1px solid #ccc;
+  border-radius: 5px; /* Add rounded corners */
+  transition: border-color 0.3s ease; /* Add transition for smooth effect */
+}
+
+textarea:focus, input:focus {
+  border-color: #ffffff; /* Change border color on focus */
+  outline: none; /* Remove default focus outline */
+}
+
+input:hover, textarea:hover {
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); /* Glowing effect */
+}
+
 button:hover {
   transform: scale(1.05);
   box-shadow: 
@@ -61,6 +77,12 @@ button:hover {
   cursor: pointer;
   border: none;
   border-radius: 5px;
+}
+
+.upload-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5), /* White highlight */
+  0 0 20px rgba(0, 0, 0, 0.4); /* Darker shadow */
 }
 
 .file-info {
