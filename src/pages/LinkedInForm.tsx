@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+
 
 const LinkedInForm: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -38,7 +40,7 @@ const LinkedInForm: React.FC = () => {
       });
       if (response.success) {
         setMessage("Data saved successfully!");
-        navigate("/status"); // Redirect to the success page
+        navigate("/statuslinkedin"); // Redirect to the success page
       } else {
         setMessage(`Failed to save data: ${response.message}`);
       }
@@ -141,13 +143,15 @@ const LinkedInForm: React.FC = () => {
               placeholder="e.g., New York, NY"
             />
           </div>
-          <button
+
+        <button
             className="column is-5 button is-dark is-rounded"
             style={{ margin: 17 }}
-            type="submit"
-          >
+            type="submit" 
+        >
             SUBMIT
-          </button>
+        </button>
+
         </div>
       </form>
       <div className="columns" style={{ margin: 5 }}>

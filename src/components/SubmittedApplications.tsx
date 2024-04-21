@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ReactDOMServer from 'react-dom/server';
 
-const SubmittedApplications: React.FC = () => {
+const SubmittedApplications = () => {
   const [companyList, setCompanyList] = useState([
     'Google STEP',
     'Meta University',
@@ -37,6 +37,9 @@ const SubmittedApplications: React.FC = () => {
 
   const iframeHTML = ReactDOMServer.renderToStaticMarkup(<ScrollableContent />);
   const iframeSrcDoc = `<!DOCTYPE html><html lang="en"><body>${iframeHTML}</body></html>`;
+
+
+  checkRecurr()
 
   return (
     <iframe

@@ -3,11 +3,25 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import SubmittedApplications from "@/components/SubmittedApplications";
 
-const StatusPage: React.FC = () => {
+interface StatusPageProps {
+  isLinkedIn: boolean;
+}
+
+const StatusPage = (props: StatusPageProps) => {
+
+
+  const isLinkedIn = props.isLinkedIn; 
+
+
   const navigate = useNavigate();
 
   // Placeholder functions to mimic actions
-  const handleStart = () => {};
+  const handleStart = () => {
+
+    if(isLinkedIn) {
+      window.ipcRenderer.invoke("run_linkedin", {});
+    }
+  };
 
   const handleStop = () => {};
 

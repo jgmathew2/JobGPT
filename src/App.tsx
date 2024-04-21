@@ -9,6 +9,9 @@ import LinkedInForm from './pages/LinkedInForm';
 import WorkDayForm from './pages/WorkDayForm';
 
 function App() {
+
+
+
   return (
     <BrowserRouter>
       <Routes>
@@ -17,7 +20,8 @@ function App() {
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/linkedin" element={<LinkedInForm />} />
         <Route path="/workday" element={<WorkDayForm />} />
-        <Route path="/status" element={<StatusPage />} />
+        <Route path="/statuslinkedin" element={<StatusPage isLinkedIn={true} />} />
+        <Route path="/statusworkday" element={<StatusPage isLinkedIn={false} />} />
       </Routes>
     </BrowserRouter>
   );

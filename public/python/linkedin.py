@@ -12,7 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 import ChatGPTPrompter
 
 driver = webdriver.Firefox()
-wait = WebDriverWait(driver, 100)
+wait = WebDriverWait(driver, 10000)
 
 with open("public/uploads/LinkedInForm.json") as exec_file:
     exec_data = json.load(exec_file)
