@@ -11,8 +11,8 @@ async def load_user_info():
 
     async with asyncio.TaskGroup() as tg:
         task1 = tg.create_task(get_response("phone number?"))
-        task2 = tg.create_task(get_response("What's my first name?"))
-        task3 = tg.create_task(get_response("What's my last name?"))
+        task2 = tg.create_task(get_response("first name?"))
+        task3 = tg.create_task(get_response("last name?"))
         task4 = tg.create_task(get_response("Address?"))
         task5 = tg.create_task(get_response("City?"))
         task6 = tg.create_task(get_response("Which state am I from?"))
@@ -20,10 +20,10 @@ async def load_user_info():
         task8 = tg.create_task(get_response("phone_number"))
         task9 = tg.create_task(get_response("What is my college major?"))
         task10 = tg.create_task(get_response("Which school am I studying at?"))
-        task11 = tg.create_task(get_response("school start year?(just year)"))
+        task11 = tg.create_task(get_response("school start year? (just year)"))
         task12 = tg.create_task(get_response("school start month?"))
         task13 = tg.create_task(get_response("school end month?"))
-        task14 = tg.create_task(get_response("school end year?(just year)"))
+        task14 = tg.create_task(get_response("school end year? (just year)"))
         task15 = tg.create_task(get_response("List all of my skills separated by commas"))
         task16 = tg.create_task(get_response("What is my LinkedIn id (content after /in/ in href)"))
 
@@ -62,8 +62,8 @@ async def load_user_info():
         async with asyncio.TaskGroup() as tg:
             job1 = tg.create_task(get_response("start month of job " + str(i) + "?"))
             job2 = tg.create_task(get_response("end month of job " + str(i) + "?"))
-            job3 = tg.create_task(get_response("start year of job " + str(i) + "?(just year)"))
-            job4 = tg.create_task(get_response("end year of job " + str(i) + "?(just year)"))
+            job3 = tg.create_task(get_response("start year of job " + str(i) + "? (just year)"))
+            job4 = tg.create_task(get_response("end year of job " + str(i) + "? (just year)"))
             job5 = tg.create_task(get_response("company of job" + str(i) + "?"))
             job6 = tg.create_task(get_response("position title of job" + str(i) + "?"))
             job7 = tg.create_task(get_response("What was the location of company" + str(i) + " that I worked at?"))
@@ -87,11 +87,8 @@ async def load_user_info():
 
 
 def write_to_file():
-
     with open("user_info_table.json", "w") as outfile: 
         json.dump(user_data, outfile)
-
-
 
 def get_user_data():
     global user_data
