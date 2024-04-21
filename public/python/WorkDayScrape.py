@@ -39,7 +39,12 @@ for job in jobs:
                 if is_partial_match_role(job.get('title', ''), criteria.get('role', '')):
                     # Collect the WorkDay links
                     if 'workdayjobs.com' in job.get('url', ''):
-                        filtered_links.append(job['url'])      
+                        filtered_links.append(job['url'])
 
-for link in filtered_links:
-    print(link)
+# Write the links to a file in a specific directory
+output_directory = '../uploads/'
+output_file_path = output_directory + 'filtered_links.txt'
+
+with open(output_file_path, 'w') as output_file:
+    for link in filtered_links:
+        output_file.write(link + '\n')
