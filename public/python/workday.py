@@ -261,7 +261,7 @@ def do_experience(user_data, exec_data):
 
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                    f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"description\"]"))).send_keys(
-            user_data["description"])
+            job_entry["description"])
 
     # Education
     for i in range(1, 2):
