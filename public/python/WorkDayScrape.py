@@ -33,7 +33,8 @@ def is_partial_match_role(job_role, criteria_role):
 filtered_links = []
 for job in jobs:
     # Check if the job is active
-    if not job.get('active', False):
+    if job.get('active', False):
+        if job.get('is_visible', False):
             # Check for partial match in location if criteria location is not empty
             if is_partial_match_location(job.get('locations', ''), criteria.get('location', '')):
                 # Check for partial match in role if criteria role is not empty
