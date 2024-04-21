@@ -10,6 +10,8 @@ client = AsyncOpenAI(
 
 pre_prompts = ["I am a US-born citizen who does not require any sponsorships. However, I do NOT have any security clearances.",
                "I generally do not appreciate unsolicited emails.",
+               "I am over 18 years old, and I possess necessary documentation to demonstrate this.",
+               "I am generally willing to accommodate any job-specific requirements in order to be hired.",
                "If you don't have the information to answer a question, answer single word: NA",
                "When responding, respond with just the answer to the question. "]
 
