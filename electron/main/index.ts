@@ -107,10 +107,41 @@ ipcMain.handle('get_previous_applications', async (event, { buffer }) => {
   
   try {
     // Get the path from Tahmid once he makes it
-    const pathname = path.join(__dirname, "../../user_info_table.json");
+    const pathname = path.join(__dirname, '../../public/uploads/completed_apps.txt');
     const data = fs.readFileSync(pathname, 'utf8');
 
     return { success: true, data};
+  } catch (err) {
+    console.error(`Failed to upload resume: ${err}`);
+    return { success: false, message: err.message };
+  }
+});
+
+ipcMain.handle('run_linkedin', async (event, { buffer }) => {
+  
+  try {
+    // Define the base path for uploads relative to the application's root directory
+    const linked_in_finder = path.join(__dirname, "../../public/python/linkedin.py");
+
+    var process = spawn('python3',["-u", linked_in_finder] ); 
+    
+
+    process.stdout.on('data', function(data:any) { 
+        const basePath = path.join(__dirname, '../../public/uploads');
+        if (!fs.existsSync(basePath)) {
+            fs.mkdirSync(basePath, { recursive: true });
+        }
+        const filePath = path.join(basePath, "completed_apps.txt");
+        
+        fs.promises.appendFile(filePath, (data + "\n"), 'utf8');
+      })
+    
+
+    process.stderr.on('data', function(data:any) { 
+      console.log(data.toString())
+    }) 
+
+    return { success: true};
   } catch (err) {
     console.error(`Failed to upload resume: ${err}`);
     return { success: false, message: err.message };

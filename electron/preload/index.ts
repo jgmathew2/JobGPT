@@ -25,7 +25,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 
   getFormData: () => ipcRenderer.invoke("form_data_from_json", {}), 
 
-  getPrevApps: () => ipcRenderer.invoke("get_previous_applications", {}),
+  getPrevApps: () => ipcRenderer.invoke("get_previous_applications", {}), 
+
+  startLinkedIn: () => ipcRenderer.invoke("run_linkedin", {}), 
 
   runPythonScript: (args) => ipcRenderer.invoke('workdayscrape', args),
 
