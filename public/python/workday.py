@@ -510,6 +510,9 @@ with open("public/uploads/WorkDayForm.json") as exec_file:
 with open("public/uploads/filtered_links.txt") as links_file:
     links = [line.rstrip() for line in links_file.readlines()]
 
+if not os.path.exists("public/uploads/link_db.txt"):
+    open("public/uploads/link_db.txt", "w").close()
+
 with open("public/uploads/link_db.txt") as link_db:
     used_links = [line.rstrip() for line in link_db.readlines()]
 
