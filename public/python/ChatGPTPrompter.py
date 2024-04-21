@@ -1,6 +1,7 @@
 from openai import AsyncOpenAI
 import pathlib
 import base64
+import asyncio
 from pypdf import PdfReader
 
 client = AsyncOpenAI(
@@ -15,14 +16,11 @@ pre_prompts = ["I am a US-born citizen who does not require any sponsorships. I 
                "If you don't have the information to answer a question, answer single word: NA",
                "When responding, respond with just the answer to the question."]
 
-
-
-
+init_lock = asyncio.Lock()
 
 # Figure out how to do pathname with python integration
 async def upload_resume():
     pathname = str(pathlib.Path(__file__).parent.resolve())
-
 
     pathname = pathname + "/../uploads/resume.pdf"
 
@@ -89,17 +87,16 @@ async def get_response(req):
 
     return chat_completion.choices[0].message.content
 
-async def do_preprompts():
 
+async def do_preprompts():
     global pre_prompts
 
     pathname = "current_gpt_convo.txt"
+    async with init_lock:
+        if(("pre-prompted" in open(pathname, "r").read()) == False): 
 
+            f = open("current_gpt_convo.txt", "a")
+            f.write(("pre-prompted" + "\n"))
 
-    if(("pre-prompted" in open(pathname, "r").read()) == False): 
-
-        f = open("current_gpt_convo.txt", "a")
-        f.write(("pre-prompted" + "\n"))
-
-        for prompt in pre_prompts:
-            await post_custom_info("Don't respond to this command:\n" + prompt)
+            for prompt in pre_prompts:
+                await post_custom_info("Don't respond to this command:\n" + prompt)
