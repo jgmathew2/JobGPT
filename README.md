@@ -1,7 +1,7 @@
-JobGPT
-======
+# JobGPT
+a project developed for the Bitcamp hackathon, completed within 36 hours.
 
-**Introducing JobGPT:** Revolutionizing the job application process with the power of AI. Here's how we're transforming your job search:
+## **Introducing JobGPT:** Revolutionizing the job application process with the power of AI
 
 *   **Automated Applications:** JobGPT uses Selenium to intelligently scan, filter, and apply to relevant job postings on top platforms like LinkedIn and Workday.
     
