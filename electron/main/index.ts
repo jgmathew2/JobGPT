@@ -151,6 +151,37 @@ ipcMain.handle("run_linkedin", async (event, { buffer }) => {
   }
 });
 
+ipcMain.handle("run_workday", async (event, { buffer }) => {
+  try {
+    // Define the base path for uploads relative to the application's root directory
+    const linked_in_finder = path.join(
+      __dirname,
+      "../../public/python/workday.py"
+    );
+
+    var process = spawn("python3", ["-u", linked_in_finder]);
+
+    process.stdout.on("data", function (data: any) {
+      const basePath = path.join(__dirname, "../../public/uploads");
+      if (!fs.existsSync(basePath)) {
+        fs.mkdirSync(basePath, { recursive: true });
+      }
+      const filePath = path.join(basePath, "completed_apps.txt");
+
+      fs.promises.appendFile(filePath, data + "\n", "utf8");
+    });
+
+    process.stderr.on("data", function (data: any) {
+      console.log(data.toString());
+    });
+
+    return { success: true };
+  } catch (err) {
+    console.error(`Failed to upload resume: ${err}`);
+    return { success: false, message: err.message };
+  }
+});
+
 // Setup IPC to run Python script
 ipcMain.handle("workdayscrape", async (event, args) => {
   // Specify the path to your Python script and include args if necessary

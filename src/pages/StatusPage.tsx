@@ -20,6 +20,8 @@ const StatusPage = (props: StatusPageProps) => {
 
     if(isLinkedIn) {
       window.ipcRenderer.invoke("run_linkedin", {});
+    } else {
+      window.ipcRenderer.invoke("run_workday", {})
     }
   };
 
