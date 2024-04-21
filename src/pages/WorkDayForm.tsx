@@ -81,7 +81,6 @@ const WorkDayForm: React.FC = () => {
               type="text"
               value={role}
               onChange={(e) => setRole(e.target.value)}
-              required
             />
           </div>
           <div className="column is-full">
