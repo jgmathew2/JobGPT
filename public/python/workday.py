@@ -2,8 +2,6 @@ import asyncio
 import json
 import os
 from datetime import datetime
-import random
-import string
 import time
 import ChatGPTPrompter
 
@@ -13,12 +11,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
-
-
-def generate_random_string(length):
-    return ''.join(random.choice(string.ascii_letters) for _ in range(length - 2)) + random.choice(
-        string.digits) + random.choice("$!")
-
 
 driver = webdriver.Firefox()
 wait = WebDriverWait(driver, 1000)
@@ -60,23 +52,6 @@ def fix_unhandled_elements():
             pass
 
 
-def do_signup():
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"createAccountLink\"]"))).click()
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"email\"]"))).send_keys(
-        "abdalrahmanumayyad@gmail.com")
-
-    password = generate_random_string(8)
-
-    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"password\"]"))).send_keys(
-        password)
-    wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"verifyPassword\"]"))).send_keys(
-        password)
-    wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"createAccountCheckbox\"]"))).click()
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]"))).click()
-
-
 def do_signin(user_data, exec_data):
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"email\"]"))).send_keys(
         exec_data["email"])
@@ -87,11 +62,50 @@ def do_signin(user_data, exec_data):
         try:
             sign_in.click()
             time.sleep(4 * BUFFER_TIME)
+
+            try:
+                driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"errorMessage\"]")
+                raise SignInException()
+            except SignInException:
+                raise
+            except:
+                pass
+
             sign_in = driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]")
+        except SignInException:
+            raise
         except:
             break
 
-    time.sleep(10 * BUFFER_TIME)
+
+class SignInException(Exception):
+    pass
+
+
+def do_signup(user_data, exec_data):
+    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"createAccountLink\"]"))).click()
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"email\"]"))).send_keys(
+        exec_data["email"])
+
+    wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"password\"]"))).send_keys(
+        exec_data["password"])
+    wait.until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"verifyPassword\"]"))).send_keys(
+        exec_data["password"])
+    wait.until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"createAccountCheckbox\"]"))).click()
+    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]"))).click()
+
+    time.sleep(4 * BUFFER_TIME)
+
+    try:
+        driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"errorMessage\"]")
+        driver.refresh()
+        do_signin(user_data, exec_data)
+    except SignInException:
+        raise
+    except:
+        pass
 
 
 def do_my_info(user_data, exec_data):
@@ -211,7 +225,7 @@ def do_experience(user_data, exec_data):
         time.sleep(BUFFER_TIME)
 
     # Work
-    for i in range(1, len(user_data["job_data"] + 1)):
+    for i in range(1, len(user_data["job_data"]) + 1):
         job_entry = user_data["job_data"][str(i - 1)]
         if i == 1:
             try:
@@ -493,9 +507,10 @@ with open("public/uploads/WorkDayForm.json") as exec_file:
 
 try:
     driver.get(
-        "https://santander.wd3.myworkdayjobs.com/en-US/SantanderCareers/login?redirect=%2Fen-US%2FSantanderCareers%2Fjob%2FMiami%2FIntern-CSU-CAC_Req1300250-1%2Fapply%2FapplyManually")
+        "https://salesforce.wd12.myworkdayjobs.com/en-US/Slack/login?redirect=%2Fen-US%2FSlack%2Fjob%2FTexas---Remote%2FStaff-Software-Engineer--SRE----Slack_JR246676%2Fapply%2FapplyManually")
 
-    do_signin(user_data, exec_data)
+    do_signup(user_data, exec_data)
+    time.sleep(10 * BUFFER_TIME)
     do_my_info(user_data, exec_data)
     do_experience(user_data, exec_data)
     do_questions(user_data, exec_data)
