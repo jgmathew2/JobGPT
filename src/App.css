@@ -5,6 +5,20 @@
   src: local('Ligconsolata'), url('https://fonts.cdnfonts.com/s/107278/Ligconsolata-Regular.woff') format('woff');
 }
 
+@font-face {
+  font-family: 'General Sans';
+  src: url('//cdn.fontshare.com/wf/K46YRH762FH3QJ25IQM3VAXAKCHEXXW4/ISLWQPUZHZF33LRIOTBMFOJL57GBGQ4B/3ZLMEXZEQPLTEPMHTQDAUXP5ZZXCZAEN.woff2') format('woff2'),
+       url('//cdn.fontshare.com/wf/K46YRH762FH3QJ25IQM3VAXAKCHEXXW4/ISLWQPUZHZF33LRIOTBMFOJL57GBGQ4B/3ZLMEXZEQPLTEPMHTQDAUXP5ZZXCZAEN.woff') format('woff'),
+       url('//cdn.fontshare.com/wf/K46YRH762FH3QJ25IQM3VAXAKCHEXXW4/ISLWQPUZHZF33LRIOTBMFOJL57GBGQ4B/3ZLMEXZEQPLTEPMHTQDAUXP5ZZXCZAEN.ttf') format('truetype');
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+
+h1 {
+  font-family: 'General Sans', sans-serif;
+}
+
 #root {
   font-family: "Ligconsolata", sans-serif;
   min-width: 100%;
@@ -35,7 +49,7 @@
   display: inline-block;
   padding: 10px 20px;
   margin: 10px;
-  background: #555; /* Slightly lighter background for the button */
+  background: #343647; /* Slightly lighter background for the button */
   color: #fff;
   cursor: pointer;
   border: none;
@@ -49,7 +63,7 @@
 .upload-confirm-button {
   display: inline-block;
   padding: 10px 20px;
-  background: #555; /* Even lighter background for the confirm button */
+  background: #343647; /* Even lighter background for the confirm button */
   color: #fff;
   cursor: pointer;
   border: none;

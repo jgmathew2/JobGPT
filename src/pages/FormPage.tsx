@@ -53,12 +53,12 @@ const FormPage = () => {
         <div className="column is-2"></div>
         <div className="column has-text-centered is-8">
           <header>
-            <h1>JOB-GPT</h1>
+            <h1>Job-GPT</h1>
           </header>
         </div>
         <div className="column has-text-right is-2" style={{ marginTop: 12 }}>
           <button className="button is-light" onClick={() => navigate(-1)}>
-            Back
+            BACK
           </button>
         </div>
       </div>
@@ -328,7 +328,7 @@ const FormPage = () => {
               onClick={updateFormData}
               className="button is-fullwidth"
             >
-              Submit
+              SUBMIT
             </button>
           </Link>
         </div>
