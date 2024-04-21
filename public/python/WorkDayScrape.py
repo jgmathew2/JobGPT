@@ -43,7 +43,7 @@ for job in jobs:
                     if 'workdayjobs.com' in job.get('url', ''):
                         filtered_links.append((job['url'], job['date_updated']))
 
-sorted_links = sorted(filtered_links)
+sorted_links = sorted(filtered_links, key=lambda link: link[1])
 
 # Write the sorted links to a file in a specific directory
 output_directory = 'public/uploads/'
