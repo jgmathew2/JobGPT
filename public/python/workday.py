@@ -329,13 +329,18 @@ def do_experience(user_data, exec_data):
 
     skills_input = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id-prompt=\"skillsPrompt\"] input")))
+    
+    skill_count = 0
     for skill in user_data["skills"]:
+        if skill_count > 5:
+            break
         skills_input.send_keys(skill)
         time.sleep(BUFFER_TIME)
         skills_input.send_keys(Keys.ENTER)
         time.sleep(4 * BUFFER_TIME)
         driver.switch_to.active_element.send_keys(Keys.ENTER)
         time.sleep(BUFFER_TIME)
+        skill_count = skill_count + 1
 
     # Resume
     for x_file in driver.find_elements(By.CSS_SELECTOR, "[data-automation-id=\"delete-file\"]"):

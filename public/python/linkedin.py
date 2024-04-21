@@ -26,7 +26,7 @@ try:
 
     page_start = 0
 
-    time.sleep(20)
+    time.sleep(10)
 
     search_query = urllib.parse.quote_plus(exec_data["searchQuery"])
     location = urllib.parse.quote_plus(exec_data["location"])
