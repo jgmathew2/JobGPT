@@ -6,7 +6,6 @@ const WorkDayForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
   const [location, setLocation] = useState("");
-  const [season, setSeason] = useState("");
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
@@ -19,7 +18,6 @@ const WorkDayForm: React.FC = () => {
       password: password,
       role: role,
       location: location,
-      season: season,
     });
 
     try {
@@ -77,7 +75,7 @@ const WorkDayForm: React.FC = () => {
             />
           </div>
           <div className="column is-full">
-            <label>Role:</label>
+            <label>Role Query:</label>
             <input
               type="text"
               value={role}
@@ -91,20 +89,9 @@ const WorkDayForm: React.FC = () => {
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}
+              placeholder="e.g., Chicago, IL"  // Adding placeholder text
               required
             />
-          </div>
-          <div className="column is-full">
-            <label>Season:</label>
-            <select
-              value={season}
-              onChange={(e) => setSeason(e.target.value)}
-              required
-            >
-              <option value="">Select a season</option>
-              <option value="Off Season">Off Season</option>
-              <option value="Summer 2024">Summer 2024</option>
-            </select>
           </div>
         </div>
         <div className="column is-5" style={{margin: 12}}>
