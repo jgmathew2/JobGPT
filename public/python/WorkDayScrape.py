@@ -1,5 +1,6 @@
 import json
 import requests
+import os
 
 # Load the local JSON file with the criteria
 with open('public/uploads/WorkDayForm.json', 'r') as file:
@@ -39,12 +40,19 @@ for job in jobs:
                 if is_partial_match_role(job.get('title', ''), criteria.get('role', '')):
                     # Collect the WorkDay links
                     if 'workdayjobs.com' in job.get('url', ''):
-                        filtered_links.append(job['url'])
+                        filtered_links.append((job['url'], job['date_updated']))
 
-# Write the links to a file in a specific directory
+sorted_links = sorted(filtered_links)
+
+# Write the sorted links to a file in a specific directory
 output_directory = 'public/uploads/'
 output_file_path = output_directory + 'filtered_links.txt'
 
+# Ensure the output directory exists
+if not os.path.exists(output_directory):
+    os.makedirs(output_directory)
+
 with open(output_file_path, 'w') as output_file:
-    for link in filtered_links:
-        output_file.write(link + '\n')
+    for link in sorted_links:
+        # Properly format the tuple to a string
+        output_file.write(f'{link[0]}\n')

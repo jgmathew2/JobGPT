@@ -37,5 +37,6 @@ yarn.lock
 user_info_table.json
 current_gpt_convo.txt
 venv/
+.venv/
 public/python/__pycache__/
 *.pyc
