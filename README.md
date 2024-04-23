@@ -1,5 +1,5 @@
 # JobGPT
-a project developed for the Bitcamp 2024 hackathon, completed within 36 hours.
+a project developed for the Bitcamp 2024 hackathon (2nd place best app), completed within 36 hours.
 
 ## **Introducing JobGPT:** Revolutionizing the job application process with the power of AI
 
