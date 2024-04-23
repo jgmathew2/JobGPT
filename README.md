@@ -33,7 +33,8 @@ To start using JobGPT, follow these steps:
 
 1.  Run `npm install` to install the necessary dependencies.
 2.  Run `pip install -r requirements.txt` to install Python dependencies.
-3.  Finally, run `npm run dev` to start the application.
+3.  Install Firefox
+4.  Finally, run `npm run dev` to start the application.
 
 Roadmap
 -------
