@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import { Link } from 'react-router-dom';
 
 const LandingPage: React.FC = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);

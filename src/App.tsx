@@ -10,8 +10,6 @@ import WorkDayForm from './pages/WorkDayForm';
 
 function App() {
 
-
-
   return (
     <BrowserRouter>
       <Routes>
