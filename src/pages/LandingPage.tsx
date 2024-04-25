@@ -5,6 +5,9 @@ const LandingPage: React.FC = () => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [uploadSuccess, setUploadSuccess] = useState<boolean>(false); // State to track upload success
 
+  const [API_KEY, setAPIKey] = useState<string | null>(null); 
+  const [show_api_inputter, showAPIInputter] = useState<boolean>(false); 
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Access the files with event.target.files
     const file = event.target.files ? event.target.files[0] : null;
@@ -14,7 +17,7 @@ const LandingPage: React.FC = () => {
   };
 
   const handleUploadClick = async () => {
-    if (resumeFile) {
+    if (resumeFile && API_KEY) {
       try {
         const response = await window.ipcRenderer.invoke("save-file", {
           buffer: await readFileAsArrayBuffer(resumeFile),
@@ -33,14 +36,23 @@ const LandingPage: React.FC = () => {
         alert("Error in saving file: " + error);
       }
       try {
+        await window.ipcRenderer.invoke("save-file", {
+          buffer: API_KEY,
+          filename: "STORED_API_KEY.txt",
+        });
         const response = await window.ipcRenderer.invoke("upload_resume", {});
       } catch (error) {
         console.error("Error in resume upload:", error);
         alert("Error in resume to chatgpt: " + error);
       }
     } else {
-      console.log("No file selected.");
-      alert("No file selected.");
+      if(!resumeFile) {
+        console.log("No file selected.");
+        alert("No file selected.");
+      } else {
+        console.log("No API Key entered.");
+        alert("No API Key entered.");
+      }
     }
   };
 
@@ -78,6 +90,28 @@ const LandingPage: React.FC = () => {
         </header>
 
         <main className="upload-container">
+        <div className="columns has-text-centered is-centered">
+            <div className="column is-12" style={{marginTop: "-20px"}}>
+            <button style={{height: 40, width: 400}} onClick={()=>showAPIInputter(!show_api_inputter)}
+              className="upload-confirm-button"
+              >           
+              ENTER CHATGPT API KEY
+            </button>
+
+            
+            {show_api_inputter == true ? 
+            
+            <input
+              id="key_inputter"
+              type="text"
+              style={{width: 300, marginTop: 20}}
+              onChange={(e) => setAPIKey(e.target.value)}
+            ></input> 
+            :
+              <></>      
+             } 
+            </div>
+          </div>
           <div className="columns is-vcentered">
             <input
               type="file"
@@ -117,7 +151,9 @@ const LandingPage: React.FC = () => {
                 </button>
               </Link>
             )}
+
           </div>
+
         </main>
       </div>
   );
