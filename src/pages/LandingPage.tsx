@@ -125,7 +125,7 @@ const LandingPage: React.FC = () => {
               className="column upload-button has-text-centered"
               style={{ width: 100, height: 45 }}
             >
-              UPLOAD
+              RESUME FILE UPLOAD
             </label>
             <button
               onClick={handleUploadClick}

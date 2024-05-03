@@ -4,9 +4,16 @@ import base64
 import asyncio
 from pypdf import PdfReader
 
+async def get_api_key():
+    f = open("public/uploads/STORED_API_KEY.txt", "r")
+    key = f.read()
+    return key
+
+
+
 client = AsyncOpenAI(
     # This is the default and can be omitted
-    api_key= str(base64.b64decode(b'c2stSlk4bTNzcFdqaFY2UFBNRHBEM0hUM0JsYmtGSmJVQ3JTTmhiWlo5MXdiTW1HbHQw'), "utf-8")
+    api_key = asyncio.run(get_api_key())
 )
 
 pre_prompts = ["I am a US-born citizen who does not require any sponsorships. I do NOT have any security clearances.",
@@ -16,7 +23,12 @@ pre_prompts = ["I am a US-born citizen who does not require any sponsorships. I 
                "If you don't have the information to answer a question, answer single word: NA",
                "When responding, respond with just the answer to the question."]
 
+
 init_lock = asyncio.Lock()
+
+
+
+
 
 # Figure out how to do pathname with python integration
 async def upload_resume():
