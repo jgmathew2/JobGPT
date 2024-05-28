@@ -2,22 +2,27 @@ import asyncio
 import json
 import os
 import re
+import time
 import urllib.parse
 from datetime import datetime
-import time
-import ChatGPTPrompter
+from typing import List
 
 from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 
+import ChatGPTPrompter
+from selenium_constants import BUFFER_TIME
+from state_machine import StateMachine, LinearState, AnswerAIQuestionsState, TransitionAfterAnswer, AIQuestion, \
+    AbortDueToErrorState
+from workday_question import WorkdayTextQuestion
+
 driver = webdriver.Firefox()
 wait = WebDriverWait(driver, 50)
-
-BUFFER_TIME = 0.5
 
 
 def fix_unhandled_elements():
@@ -523,6 +528,69 @@ with open("public/uploads/link_db.txt") as link_db:
 
 link_db = open("public/uploads/link_db.txt", "a")
 
+
+class MyInfoState(LinearState):
+    def __init__(self, next_state_key: str, driver: WebDriver, user_data):
+        super().__init__(next_state_key)
+        self.driver = driver
+        self.callbacks = [
+            WorkdayTextQuestion(By.CSS_SELECTOR, "legalNameSection_firstName", user_data["first_name"]),
+            WorkdayTextQuestion(By.CSS_SELECTOR, "legalNameSection_lastName", user_data["last_name"]),
+            WorkdayTextQuestion(By.CSS_SELECTOR, "addressSection_addressLine1", user_data["address"]),
+            WorkdayTextQuestion(By.CSS_SELECTOR, "addressSection_city", user_data["city"]),
+            WorkdayTextQuestion(By.CSS_SELECTOR, "addressSection_regionSubdivision1", "N/A")
+        ]
+
+    def do_work(self):
+        for callback in self.callbacks:
+            callback(self.driver)
+
+
+class TransitionAfterMyInfo(TransitionAfterAnswer):
+
+    def check_if_error(self, driver: WebDriver) -> bool:
+        pass
+
+    def has_page_changed(self) -> bool:
+        pass
+
+
+class MyInfoAIState(AnswerAIQuestionsState):
+    def __init__(self, wait: WebDriverWait, error_state_key: str):
+        super().__init__(wait)
+        self.error_state_key = error_state_key
+
+    def find_unanswered_questions(self) -> List[AIQuestion]:
+        pass
+
+    def submit_page(self):
+        pass
+
+    def create_transition_worker(self) -> TransitionAfterAnswer:
+        return TransitionAfterMyInfo(
+            self.error_state_key
+        )
+
+
+class ExperienceState(LinearState):
+    def __init__(self, next_state_key: str, driver: WebDriver):
+        super().__init__(next_state_key)
+        self.driver = driver
+
+    def do_work(self):
+        for delete_panel in self.driver.find_elements(By.CSS_SELECTOR, "[data-automation-id=\"panel-set-delete-button\"]"):
+            delete_panel.send_keys(Keys.ENTER)
+        time.sleep(BUFFER_TIME)
+
+        for x_skill in driver.find_elements(By.CSS_SELECTOR,
+                                            "[data-automation-id=\"skillsSection\"] [data-automation-id=\"DELETE_charm\"]"):
+            try:
+                x_skill.click()
+            except:
+                pass
+        time.sleep(BUFFER_TIME)
+
+
 try:
     for link in links:
         if link in used_links:
@@ -530,7 +598,8 @@ try:
 
         try:
             driver.get(link)
-            position_name = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"jobPostingHeader\"]"))).text
+            position_name = wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"jobPostingHeader\"]"))).text
             position_company = "Unknown"
             try:
                 current_url = urllib.parse.urlparse(driver.current_url)
@@ -540,11 +609,21 @@ try:
             except:
                 pass
 
-            wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-uxi-element-id^=\"Apply_adventureButton\"]"))).click()
+            wait.until(EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, "[data-uxi-element-id^=\"Apply_adventureButton\"]"))).click()
             wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"applyManually\"]"))).click()
 
             do_signup(user_data, exec_data)
             time.sleep(10 * BUFFER_TIME)
+            states = {
+                "Error": AbortDueToErrorState(),
+                "My Info / Main": MyInfoState("My Info / AI", driver, user_data),
+                "My Info / AI": MyInfoAIState(wait, "Error"),
+                "Experience / Main": ExperienceState("Experience / Answer", driver)
+            }
+            initial_state = None
+            state_machine = StateMachine(states, initial_state)
+            state_machine.run()
             do_my_info(user_data, exec_data)
             do_experience(user_data, exec_data)
             do_questions(user_data, exec_data)
