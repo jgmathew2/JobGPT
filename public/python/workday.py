@@ -5,6 +5,9 @@ import re
 import urllib.parse
 from datetime import datetime
 import time
+
+import Levenshtein
+
 import ChatGPTPrompter
 
 from selenium import webdriver
@@ -21,37 +24,75 @@ BUFFER_TIME = 0.5
 
 
 def fix_unhandled_elements():
-    for element in driver.find_elements(By.CSS_SELECTOR, "[id^=\"input-\"]"):
-        try:
-            element_id = element.get_attribute("id")
-            label = driver.find_element(By.CSS_SELECTOR, f"[for=\"{element_id}\"]")
-
-            if "*" not in label.text:
-                continue
-
-            curr_value = element.get_attribute("value")
-            if curr_value is None or curr_value != "":
-                continue
-
-            if element.get_attribute("data-automation-id") in ["select-files"]:
-                continue
-
+    while True:
+        any_answered = False
+        for element in driver.find_elements(By.CSS_SELECTOR, "[id^=\"input-\"]"):
             try:
-                parent_element = element.find_element(By.XPATH, "../..")
-                if parent_element.get_attribute("data-automation-id") == "multiselectInputContainer":
-                    if parent_element.find_element(By.CSS_SELECTOR, "[data-automation-id=\"menuItem\"]"):
-                        continue
+                element_id = element.get_attribute("id")
+                label = driver.find_element(By.CSS_SELECTOR, f"[for=\"{element_id}\"]")
+
+                if "*" not in label.text:
+                    continue
+
+                curr_value = element.get_attribute("value")
+                if curr_value is None or curr_value != "":
+                    continue
+
+                if element.get_attribute("data-automation-id") in ["select-files"]:
+                    continue
+
+                try:
+                    parent_element = element.find_element(By.XPATH, "../..")
+                    if parent_element.get_attribute("data-automation-id") == "multiselectInputContainer":
+                        if parent_element.find_element(By.CSS_SELECTOR, "[data-automation-id=\"menuItem\"]"):
+                            continue
+                except:
+                    pass
+
+                driver.execute_script("arguments[0].click()", element)
+                controls = element.get_attribute("aria-controls")
+                if controls is not None:
+                    controls_ol = driver.find_element(By.ID, controls)
+                    controls_children = controls_ol.find_elements(By.XPATH, "./*")
+                    opts = list(map(lambda e: e.text, controls_children[1:]))
+                    opts_prompt = ", ".join(map(lambda opt: f"\"{opt}\"", opts))
+
+                    prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, choose an answer that makes sense for an average person. You have a limited number of choices, and you MUST select one of these choices. The choices are: {opts_prompt}. Use one of these choices exactly. You MUST respond with one of these options. The question is: {label.text}"
+                    found_exact_response = False
+                    response = None
+                    for _ in range(5):
+                        response = asyncio.run(ChatGPTPrompter.get_response(prompt))
+                        if response in opts:
+                            found_exact_response = True
+                            break
+                    if not found_exact_response:
+                        min_edit_distance = None
+                        best_response = None
+                        for opt in opts:
+                            edit_distance = Levenshtein.distance(opt, response)
+                            if min_edit_distance is None or edit_distance < min_edit_distance:
+                                min_edit_distance = edit_distance
+                                best_response = response
+                        response = best_response
+
+                    element.send_keys(response)
+                    time.sleep(BUFFER_TIME)
+                    element.send_keys(Keys.ENTER)
+                    any_answered = True
+                    continue
+
+                try:
+                    response = asyncio.run(ChatGPTPrompter.get_response(
+                        f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, write N/A. Speak from my perspective, rather than from yours. The question is: {label.text}"))
+                    element.send_keys(response)
+                    any_answered = True
+                except:
+                    pass
             except:
                 pass
 
-            try:
-                response = asyncio.run(ChatGPTPrompter.get_response(
-                    f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, write N/A. Speak from my perspective, rather than from yours. The question is: {label.text}"))
-                element.send_keys(response)
-            except:
-                pass
-        except:
-            pass
+        if not any_answered:
+            break
 
 
 def do_signin(user_data, exec_data):
@@ -94,9 +135,18 @@ def do_signup(user_data, exec_data):
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"verifyPassword\"]"))).send_keys(
         exec_data["password"])
-    wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"createAccountCheckbox\"]"))).click()
-    wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]"))).click()
+    try:
+        driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"createAccountCheckbox\"]").click()
+    except:
+        pass
+
+    for _ in range(3):
+        try:
+            driver.execute_script("arguments[0].click()",
+                                  driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"click_filter\"]"))
+            time.sleep(BUFFER_TIME)
+        except:
+            break
 
     time.sleep(4 * BUFFER_TIME)
 
@@ -185,7 +235,7 @@ def do_my_info(user_data, exec_data):
         (By.CSS_SELECTOR, "[data-automation-id=\"addressSection_countryRegion\"]")))
     for c in user_data["state"]:
         region.send_keys(c)
-        time.sleep(min(BUFFER_TIME / len(user_data["state"]), 0.1))
+        time.sleep(max(BUFFER_TIME / len(user_data["state"]), 0.1))
     time.sleep(BUFFER_TIME)
     postal_code = wait.until(EC.presence_of_element_located(
         (By.CSS_SELECTOR, "[data-automation-id=\"addressSection_postalCode\"]")))
@@ -217,14 +267,22 @@ def do_my_info(user_data, exec_data):
         (By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
 
 
-def do_experience(user_data, exec_data):
+def do_experience(user_data, exec_data, position_company, position_name):
     # Wait until page visible
     wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"workExperienceSection\"]")))
 
     # Delete (work, education)
-    for delete_panel in driver.find_elements(By.CSS_SELECTOR, "[data-automation-id=\"panel-set-delete-button\"]"):
-        delete_panel.send_keys(Keys.ENTER)
-        time.sleep(BUFFER_TIME)
+    while True:
+        x_files = driver.find_elements(By.CSS_SELECTOR, "[data-automation-id=\"panel-set-delete-button\"]")
+        if len(x_files) == 0:
+            break
+
+        for x_file in x_files:
+            try:
+                x_file.send_keys(Keys.ENTER)
+            except:
+                pass
+            time.sleep(BUFFER_TIME)
 
     # Work
     for i in range(1, len(user_data["job_data"]) + 1):
@@ -256,8 +314,10 @@ def do_experience(user_data, exec_data):
 
         dates = wait.until(EC.presence_of_all_elements_located((By.CSS_SELECTOR,
                                                                 f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"dateSectionMonth-input\"]")))
-        dates[0].send_keys(job_entry["start_month"] + "/" + job_entry["start_year"])
-        dates[0].send_keys(job_entry["end_month"] + "/" + job_entry["end_year"])
+        for c in job_entry["start_month"] + "/" + job_entry["start_year"]:
+            dates[0].send_keys(c)
+        for c in job_entry["end_month"] + "/" + job_entry["end_year"]:
+            dates[1].send_keys(c)
 
         wait.until(EC.presence_of_element_located((By.CSS_SELECTOR,
                                                    f"[data-automation-id=\"workExperience-{i}\"] [data-automation-id=\"description\"]"))).send_keys(
@@ -329,7 +389,7 @@ def do_experience(user_data, exec_data):
 
     skills_input = wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id-prompt=\"skillsPrompt\"] input")))
-    
+
     skill_count = 0
     for skill in user_data["skills"]:
         if skill_count > 5:
@@ -343,14 +403,31 @@ def do_experience(user_data, exec_data):
         skill_count = skill_count + 1
 
     # Resume
-    for x_file in driver.find_elements(By.CSS_SELECTOR, "[data-automation-id=\"delete-file\"]"):
-        x_file.send_keys(Keys.ENTER)
-        time.sleep(BUFFER_TIME)
+    while True:
+        x_files = driver.find_elements(By.CSS_SELECTOR, "[data-automation-id=\"delete-file\"]")
+        if len(x_files) == 0:
+            break
+
+        for x_file in x_files:
+            try:
+                x_file.send_keys(Keys.ENTER)
+            except:
+                pass
+            time.sleep(BUFFER_TIME)
 
     time.sleep(2 * BUFFER_TIME)
     wait.until(
         EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"file-upload-input-ref\"]"))).send_keys(
         os.path.abspath("public/uploads/resume.pdf"))
+    response = asyncio.run(ChatGPTPrompter.get_response(
+        f"I am applying to {position_company}'s role as a {position_name}. Write a cover letter for me that demonstrates that I am an excellent candidate for this role. Include personal details about how my experiences make me a prime candidate for the job. Do NOT include any placeholders in the cover letter: fill in any information as necessary. Do not include [Your Name] or any such placeholders: use my actual name. Follow all instructions exactly or else someone will die."))
+    with open("public/uploads/cover_letter.txt", "w") as cover_letter_file:
+        cover_letter_file.write(response)
+        cover_letter_file.flush()
+    time.sleep(2 * BUFFER_TIME)
+    wait.until(
+        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"file-upload-input-ref\"]"))).send_keys(
+        os.path.abspath("public/uploads/cover_letter.txt"))
     time.sleep(4 * BUFFER_TIME)
 
     # LinkedIn
@@ -419,11 +496,23 @@ def do_questions(user_data, exec_data):
                                 opts = list(map(lambda e: e.text, children[1:]))
                                 opts_prompt = ", ".join(map(lambda opt: f"\"{opt}\"", opts))
 
-                                prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, choose an answer that makes sense for an average person. You have a limited number of choices, and you MUST select one of these choices. The choices are: {opts_prompt}. Use one of these choices exactly. You MUST respond with one of these options. The question is: {question}"
-                                while True:
+                                prompt = f"Answer the following question to the best of your ability from my perspective, based on the information I have given you. If you are unsure of your answer, choose an answer that makes sense for an average person. You have a limited number of choices, and you MUST select one of these choices. The choices are: {opts_prompt}. Use one of these choices exactly. You MUST respond with one of these options. Do not add any extra periods or punctuation if they are not present in the original option. The question is: {question}. If you do not respond to the question with one of the options, someone will die. Remember, the options are {opts_prompt}."
+                                found_exact_response = False
+                                response = None
+                                for _ in range(5):
                                     response = asyncio.run(ChatGPTPrompter.get_response(prompt))
                                     if response in opts:
+                                        found_exact_response = True
                                         break
+                                if not found_exact_response:
+                                    min_edit_distance = None
+                                    best_response = None
+                                    for opt in opts:
+                                        edit_distance = Levenshtein.distance(opt, response)
+                                        if min_edit_distance is None or edit_distance < min_edit_distance:
+                                            min_edit_distance = edit_distance
+                                            best_response = response
+                                    response = best_response
 
                                 answer.send_keys(response)
                                 time.sleep(BUFFER_TIME)
@@ -444,7 +533,7 @@ def do_questions(user_data, exec_data):
     time.sleep(10 * BUFFER_TIME)
     try:
         driver.find_element(By.CSS_SELECTOR, "[data-automation-id*=\"QuestionnairePage\"]")
-        do_questions()
+        do_questions(user_data, exec_data)
     except:
         pass
 
@@ -479,8 +568,11 @@ def do_voluntary(user_data, exec_data):
             except:
                 pass
 
-    driver.execute_script("arguments[0].click()", wait.until(
-        EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"agreementCheckbox\"]"))))
+    try:
+        driver.execute_script("arguments[0].click()",
+                              driver.find_element(By.CSS_SELECTOR, "[data-automation-id=\"agreementCheckbox\"]"))
+    except:
+        pass
     time.sleep(BUFFER_TIME)
 
     wait.until(
@@ -530,7 +622,8 @@ try:
 
         try:
             driver.get(link)
-            position_name = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"jobPostingHeader\"]"))).text
+            position_name = wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, "[data-automation-id=\"jobPostingHeader\"]"))).text
             position_company = "Unknown"
             try:
                 current_url = urllib.parse.urlparse(driver.current_url)
@@ -540,16 +633,19 @@ try:
             except:
                 pass
 
-            wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-uxi-element-id^=\"Apply_adventureButton\"]"))).click()
+            wait.until(EC.element_to_be_clickable(
+                (By.CSS_SELECTOR, "[data-uxi-element-id^=\"Apply_adventureButton\"]"))).click()
             wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"applyManually\"]"))).click()
 
             do_signup(user_data, exec_data)
             time.sleep(10 * BUFFER_TIME)
             do_my_info(user_data, exec_data)
-            do_experience(user_data, exec_data)
+            do_experience(user_data, exec_data, position_company, position_name)
             do_questions(user_data, exec_data)
             do_voluntary(user_data, exec_data)
             do_self_identify(user_data, exec_data)
+            wait.until(
+                EC.element_to_be_clickable((By.CSS_SELECTOR, "[data-automation-id=\"bottom-navigation-next-button\"]"))).click()
 
             used_links.append(link)
 

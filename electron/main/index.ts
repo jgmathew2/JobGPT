@@ -189,20 +189,20 @@ ipcMain.handle("workdayscrape", async (event, args) => {
   const command = `python ${scriptPath} ${args}`;
 
   return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        return reject(stderr);
-      }
-      console.log(`stdout: ${stdout}`);
-      resolve(stdout);
-    });
+    resolve("ignored: demo");
+    // exec(command, (error, stdout, stderr) => {
+    //   if (error) {
+    //     console.error(`exec error: ${error}`);
+    //     return reject(stderr);
+    //   }
+    //   console.log(`stdout: ${stdout}`);
+    //   resolve(stdout);
+    // });
   });
 });
 
 ipcMain.handle("stop_process", async (event, { buffer }) => {
-
-    var process = spawn("pkill", ["-9", "-f", buffer]);
+  var process = spawn("pkill", ["-9", "-f", buffer]);
 });
 
 let win: BrowserWindow | null = null;

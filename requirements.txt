@@ -2,3 +2,4 @@ openai
 selenium
 pypdf
 requests
+Levenshtein
